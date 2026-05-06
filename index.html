@@ -11,9 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- MediaPipe Vision Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js" crossorigin="anonymous"></script>
-
     <style>
         :root { --pink: #ff85a2; --cream: #fdf5e6; --dark-pink: #ff4d79; --brown: #8d6e63; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -123,7 +120,6 @@
             <canvas id="toga-canvas"></canvas>
         </div>
         
-        <!-- Gambar Toga dari GitHub -->
         <img id="toga-img" src="https://raw.githubusercontent.com/Bangyokoji/For-you/7e6e04cf14e68d5925fccf66264853b3ad754b7d/1778046603580.png" crossorigin="anonymous">
         <button class="btn-toggle-toga" onclick="toggleTogaFilter()">🎓</button>
 
@@ -191,31 +187,22 @@
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
 
-        // ==================== AI FILTER TOGA ====================
-        let faceLandmarker;
-        let isAIReady = false;
+        // ==================== FILTER TOGA NATIVE API + FALLBACK ====================
+        let isTogaReady = false;
         let togaEnabled = false;
         let requestAnimationFrameId;
+        let faceDetector; // Native API
 
-        async function loadAI() {
-            try {
-                const vision = await mediapipe.tasks.vision;
-                const filesetResolver = await vision.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
-                faceLandmarker = await vision.FaceLandmarker.createFromOptions(filesetResolver, {
-                    baseOptions: {
-                        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-                        delegate: "GPU"
-                    },
-                    runningMode: "VIDEO",
-                    numFaces: 1
-                });
-                isAIReady = true;
-                console.log("AI FILTER SIAP ✅");
-            } catch (e) {
-                console.error("AI Gagal:", e);
-            }
+        // Cek dukungan native FaceDetector
+        if ('FaceDetector' in window) {
+            faceDetector = new FaceDetector({ fastMode: true });
+            isTogaReady = true;
+            console.log("✅ Native FaceDetector siap");
+        } else {
+            // Fallback ringan: tidak pakai deteksi wajah, tapi tetap bisa pasang toga manual
+            console.warn("⚠️ FaceDetector tidak didukung. Toga akan muncul di tengah layar.");
+            isTogaReady = true;
         }
-        loadAI();
 
         // ==================== KAMERA & TOGA LOGIC ====================
         (function() {
@@ -227,51 +214,60 @@
             const previewWrapper = document.getElementById("cam-preview-wrapper");
             let currentFacingMode = "user";
 
-            // Pastikan gambar toga sudah termuat
-            function isTogaReady() {
+            // Tunggu gambar toga termuat
+            togaImg.onload = () => {
+                isTogaReady = true;
+                console.log("✅ Gambar toga termuat");
+            };
+
+            function isTogaImgReady() {
                 return togaImg.complete && togaImg.naturalWidth > 0;
             }
 
-            function renderLoop() {
-                if (!togaEnabled || !faceLandmarker || !videoEl.paused) return;
-                if (!isTogaReady()) {
+            async function renderLoop() {
+                if (!togaEnabled || videoEl.paused) return;
+                if (!isTogaImgReady()) {
                     requestAnimationFrameId = requestAnimationFrame(renderLoop);
                     return;
                 }
 
-                // Sinkronkan ukuran canvas
-                if (videoEl.videoWidth > 0 && togaCanvas.width !== videoEl.videoWidth) {
+                // Sinkronkan canvas
+                if (videoEl.videoWidth > 0 && (togaCanvas.width !== videoEl.videoWidth || togaCanvas.height !== videoEl.videoHeight)) {
                     togaCanvas.width = videoEl.videoWidth;
                     togaCanvas.height = videoEl.videoHeight;
-                    console.log("Canvas diatur:", togaCanvas.width, togaCanvas.height);
                 }
 
-                const results = faceLandmarker.detectForVideo(videoEl, performance.now());
                 togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
 
-                if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-                    const l = results.faceLandmarks[0];
-                    // Landmark 10 (tengah dahi), 234 kiri, 454 kanan
-                    const faceWidth = Math.hypot(l[454].x - l[234].x, l[454].y - l[234].y) * togaCanvas.width;
-                    const togaW = faceWidth * 2.3;  // Lebar toga
-                    const togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
-                    const angle = Math.atan2(l[263].y - l[33].y, l[263].x - l[33].x);
+                let posX = togaCanvas.width / 2;
+                let posY = togaCanvas.height * 0.3;
+                let togaW = togaCanvas.width * 0.4;
+                let togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
 
-                    togaCtx.save();
-                    // Posisi di landmark 10 (dahi)
-                    togaCtx.translate(l[10].x * togaCanvas.width, l[10].y * togaCanvas.height);
-                    togaCtx.rotate(angle);
-                    // Gambar toga, offset Y agar berada di atas kepala (sekitar -0.9x tinggi toga)
-                    togaCtx.drawImage(togaImg, -togaW / 2, -togaH * 0.95, togaW, togaH);
-                    togaCtx.restore();
+                // Jika native API tersedia, deteksi wajah
+                if (faceDetector) {
+                    try {
+                        const faces = await faceDetector.detect(videoEl);
+                        if (faces.length > 0) {
+                            const face = faces[0];
+                            const box = face.boundingBox;
+                            // Posisi toga di atas kepala
+                            posX = box.x + box.width / 2 - togaW / 2;
+                            posY = box.y - togaH * 0.5;
+                            togaW = box.width * 1.2;
+                            togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
+                        }
+                    } catch (e) {
+                        // Fallback ke tengah jika error
+                    }
                 }
 
+                togaCtx.drawImage(togaImg, posX, posY, togaW, togaH);
                 requestAnimationFrameId = requestAnimationFrame(renderLoop);
             }
 
             window.toggleTogaFilter = function() {
-                if (!isAIReady) { alert("AI masih loading..."); return; }
-                if (!isTogaReady()) { alert("Gambar toga belum termuat"); return; }
+                if (!isTogaImgReady()) { alert("Gambar toga belum termuat"); return; }
                 togaEnabled = !togaEnabled;
                 document.querySelector('.btn-toggle-toga').classList.toggle('active', togaEnabled);
                 if (togaEnabled) {

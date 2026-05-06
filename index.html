@@ -187,24 +187,16 @@
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
 
-        // ==================== FILTER TOGA NATIVE API + FALLBACK ====================
-        let isTogaReady = false;
-        let togaEnabled = false;
-        let requestAnimationFrameId;
-        let faceDetector; // Native API
-
-        // Cek dukungan native FaceDetector
+        // ==================== FILTER TOGA (NATIVE FACEDETECTOR) ====================
+        let faceDetector = null;
         if ('FaceDetector' in window) {
             faceDetector = new FaceDetector({ fastMode: true });
-            isTogaReady = true;
-            console.log("✅ Native FaceDetector siap");
+            console.log("✅ FaceDetector API siap");
         } else {
-            // Fallback ringan: tidak pakai deteksi wajah, tapi tetap bisa pasang toga manual
             console.warn("⚠️ FaceDetector tidak didukung. Toga akan muncul di tengah layar.");
-            isTogaReady = true;
         }
 
-        // ==================== KAMERA & TOGA LOGIC ====================
+        // ==================== KAMERA & TOGA ====================
         (function() {
             let cameraStream = null;
             const videoEl = document.getElementById("ucapan-video");
@@ -213,12 +205,8 @@
             const togaImg = document.getElementById("toga-img");
             const previewWrapper = document.getElementById("cam-preview-wrapper");
             let currentFacingMode = "user";
-
-            // Tunggu gambar toga termuat
-            togaImg.onload = () => {
-                isTogaReady = true;
-                console.log("✅ Gambar toga termuat");
-            };
+            let togaEnabled = false;
+            let requestAnimationFrameId;
 
             function isTogaImgReady() {
                 return togaImg.complete && togaImg.naturalWidth > 0;
@@ -231,7 +219,7 @@
                     return;
                 }
 
-                // Sinkronkan canvas
+                // Sinkronkan ukuran canvas
                 if (videoEl.videoWidth > 0 && (togaCanvas.width !== videoEl.videoWidth || togaCanvas.height !== videoEl.videoHeight)) {
                     togaCanvas.width = videoEl.videoWidth;
                     togaCanvas.height = videoEl.videoHeight;
@@ -239,26 +227,28 @@
 
                 togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
 
-                let posX = togaCanvas.width / 2;
-                let posY = togaCanvas.height * 0.3;
+                // Default posisi & ukuran (fallback)
+                let posX = (togaCanvas.width - togaCanvas.width * 0.4) / 2;
+                let posY = togaCanvas.height * 0.2;
                 let togaW = togaCanvas.width * 0.4;
                 let togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
 
-                // Jika native API tersedia, deteksi wajah
+                // Deteksi wajah jika API tersedia
                 if (faceDetector) {
                     try {
                         const faces = await faceDetector.detect(videoEl);
                         if (faces.length > 0) {
-                            const face = faces[0];
-                            const box = face.boundingBox;
-                            // Posisi toga di atas kepala
-                            posX = box.x + box.width / 2 - togaW / 2;
-                            posY = box.y - togaH * 0.5;
-                            togaW = box.width * 1.2;
+                            const box = faces[0].boundingBox;
+                            // Lebar toga = 1.4 x lebar wajah (tampak proporsional)
+                            togaW = box.width * 1.4;
                             togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
+                            // Posisi horizontal: tengah-tengah wajah
+                            posX = box.x + box.width / 2 - togaW / 2;
+                            // Posisi vertikal: di atas kotak wajah (sekitar 0.4 x tinggi toga di atas dahi)
+                            posY = box.y - togaH * 0.45;
                         }
                     } catch (e) {
-                        // Fallback ke tengah jika error
+                        // Biarkan fallback
                     }
                 }
 

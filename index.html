@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- MediaPipe Face Landmarker -->
+    <!-- MediaPipe Face Landmarker (Stable Version) -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js" crossorigin="anonymous"></script>
 
     <style>
@@ -37,7 +37,6 @@
 
         .petal { position: fixed; top: -10%; z-index: 1; pointer-events: none; color: var(--pink); font-size: 1.5rem; }
 
-        /* Tombol Kembali */
         .btn-back-floating {
             position: fixed; top: 25px; left: 20px; z-index: 9500;
             background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
@@ -50,7 +49,6 @@
         .glass-card { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); padding: 30px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .btn-main { background: var(--pink); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; max-width: 260px; }
 
-        /* Board Polaroid */
         #board { position: relative; width: 100%; height: 100%; display: none; z-index: 10; overflow: hidden; }
         .title { text-align: center; font-family: 'Caveat'; font-size: 2.5rem; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); padding-top: 60px; pointer-events: none; position: relative; z-index: 5; }
         .card { position: absolute; width: 105px; height: 135px; cursor: pointer; z-index: 100; }
@@ -58,7 +56,7 @@
         .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
         .card::after { content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 40px; height: 15px; background: rgba(255, 133, 162, 0.6); z-index: 30; }
 
-        /* Posisi Kartu */
+        /* Posisi Kartu Board */
         .p1 { top: 18%; left: 10%; transform: rotate(-5deg); }
         .p2 { top: 15%; right: 10%; transform: rotate(5deg); }
         .p3 { top: 35%; left: 35%; transform: rotate(-3deg); }
@@ -75,12 +73,12 @@
         .vinyl { width: 45px; height: 45px; background: #333; border-radius: 50%; border: 3px solid #444; display: flex; align-items: center; justify-content: center; }
         .vinyl::after { content: ""; width: 12px; height: 12px; background: var(--pink); border-radius: 50%; border: 2px solid white; }
         .spinning { animation: spin 3s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* MODE KAMERA UCAPAN */
+        /* MODE KAMERA */
         #camera-ucapan-container { position: fixed; inset: 0; z-index: 18000; display: none; flex-direction: column; align-items: center; background: #000; }
         #cam-preview-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
-        #cam-preview-wrapper.mirrored { transform: scaleX(-1); }
+        #cam-preview-wrapper.mirrored { transform: scaleX(-1); } /* Mirror Effect */
+
         #ucapan-video, #toga-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         
         .btn-toggle-toga {
@@ -118,14 +116,15 @@
     <button class="btn-back-floating" id="global-back-btn" onclick="backToModeSelection()">← Kembali</button>
     <div id="music-control" onclick="toggleMusic()"><div class="vinyl" id="vinyl"></div></div>
     <div id="close-area" onclick="backToBoard()" style="position:fixed; inset:0; z-index:4000; display:none;"></div>
-    
     <button id="global-reveal-btn" style="position:fixed; bottom:10%; left:50%; transform:translate(-50%, 0) scale(0); background:var(--dark-pink); color:white; border:none; padding:12px 25px; border-radius:50px; font-weight:bold; z-index:8000; display:none;" onclick="openQuiz()">Buka Pesan Sayang 💌</button>
 
+    <!-- Kamera Container -->
     <div id="camera-ucapan-container">
         <div id="cam-preview-wrapper" class="mirrored">
             <video id="ucapan-video" autoplay playsinline></video>
             <canvas id="toga-canvas"></canvas>
         </div>
+        <!-- Link Toga Baru dari GitHub -->
         <img id="toga-img" src="https://raw.githubusercontent.com/Bangyokoji/ArthaFreshSejahtera/926161e17b68b8e1af9d9bd02bd9bc85ee269ecb/1778046603580.png" crossorigin="anonymous">
         <button class="btn-toggle-toga" onclick="toggleTogaFilter()">🎓</button>
         <div class="ucapan-header">CONGRATULATIONS SAYANG</div>
@@ -137,6 +136,7 @@
         <button class="btn-camera-ctrl btn-close-ucapan" onclick="stopUcapan()">← Kembali</button>
     </div>
 
+    <!-- UI Screens -->
     <div id="sc1" class="screen">
         <div class="glass-card">
             <div style="font-size:80px; cursor:pointer;" onclick="toSc2()">📩</div>
@@ -172,7 +172,7 @@
         </div>
         <div class="card p5" data-q="jangan ke seringan mbotok yang,mbok kamu sering mbotok?" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d"></div>
-            <div class="message-box"><p>hihihi becanda sayangg,kamu ngga mandi be tetep cakep,tapi tetep mandi penting buat kebersihan😊🌸</p></div>
+            <div class="message-box"><p>hihihi becanda sayangg, kamu ngga mandi juga cakep kok! 😊🌸</p></div>
         </div>
         <div class="card p6" data-q="Semangat buat kedepannya? 🤝" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP"></div>
@@ -191,7 +191,7 @@
             <p id="quiz-text" style="margin-bottom:20px; font-weight:bold;"></p>
             <div id="std-buttons">
                 <button class="btn-ans" style="padding:10px 18px; border-radius:12px; border:none; font-weight:bold; background:var(--pink); color:white; margin:5px;" onclick="solveQuiz()">Iya bub ❤️</button>
-                <button id="btnNo" class="btn-ans" style="padding:10px 18px; border-radius:12px; border:none; font-weight:bold; background:#eee; color:#777; margin:5px; transition: 0.1s;" onpointerenter="dodge(this)" onclick="dodge(this)">Engga 😜</button>
+                <button id="btnNo" class="btn-ans" style="padding:10px 18px; border-radius:12px; border:none; font-weight:bold; background:#eee; color:#777; margin:5px;" onpointerenter="dodge(this)" onclick="dodge(this)">Engga 😜</button>
             </div>
             <div id="rating-buttons" style="display:none; grid-template-columns:repeat(3,1fr); gap:8px;">
                 <button class="btn-ans" style="background:var(--pink); color:white; padding:10px; border-radius:12px; border:none; font-weight:bold;" onclick="sendRating('10')">10</button>
@@ -209,6 +209,20 @@
         const audio = document.getElementById('lagu');
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
+
+        // PRE-LOAD AI SYSTEM SEJAK AWAL
+        let faceLandmarker;
+        (async () => {
+            try {
+                const vision = await mediapipe.tasks.vision;
+                const filesetResolver = await vision.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
+                faceLandmarker = await vision.FaceLandmarker.createFromOptions(filesetResolver, {
+                    baseOptions: { modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`, delegate: "GPU" },
+                    runningMode: "VIDEO", numFaces: 1
+                });
+                console.log("AI SYSTEM LOADED");
+            } catch (e) { console.error("AI Init Error:", e); }
+        })();
 
         function createHeart(e) {
             const heart = document.createElement('div');
@@ -260,18 +274,16 @@
         }
 
         function openQuiz() {
-            const quizOverlay = document.getElementById('quiz-overlay');
             const btnNo = document.getElementById('btnNo');
-            gsap.set(btnNo, { x: 0, y: 0 }); // Reset posisi tombol "Engga"
+            gsap.set(btnNo, { x: 0, y: 0 });
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
             document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none";
-            quizOverlay.style.display='flex';
+            document.getElementById('quiz-overlay').style.display='flex';
         }
 
         function dodge(b) {
-            // Jarak lompatan diperbesar agar responsif (acak antara -100 sampai 100)
             const randomX = (Math.random() - 0.5) * 200;
             const randomY = (Math.random() - 0.5) * 200;
             gsap.to(b, { x: randomX, y: randomY, duration: 0.2, ease: "power2.out" });
@@ -285,9 +297,8 @@
             let i=0; function type() { if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type();
         }
 
-        // ==================== KAMERA & TOGA ====================
+        // ==================== KAMERA & TOGA (FIXED) ====================
         (function() {
-            let faceLandmarker;
             let cameraStream = null;
             let togaEnabled = false;
             let requestAnimationFrameId;
@@ -298,18 +309,6 @@
             const togaCtx = togaCanvas.getContext("2d");
             const togaImg = document.getElementById("toga-img");
             const previewWrapper = document.getElementById("cam-preview-wrapper");
-
-            async function initAI() {
-                if (faceLandmarker) return;
-                try {
-                    const vision = await mediapipe.tasks.vision;
-                    const filesetResolver = await vision.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
-                    faceLandmarker = await vision.FaceLandmarker.createFromOptions(filesetResolver, {
-                        baseOptions: { modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`, delegate: "GPU" },
-                        runningMode: "VIDEO", numFaces: 1
-                    });
-                } catch (e) { console.error("AI Error:", e); }
-            }
 
             window.startUcapan = async function() {
                 try {
@@ -323,7 +322,7 @@
                     document.getElementById('sc2').style.display='none'; document.getElementById('bgVideo').style.display='none';
                     document.getElementById('camera-ucapan-container').style.display='flex';
                     if (audio.paused) audio.play(); vinyl.classList.add('spinning');
-                    initSwiper(); await initAI();
+                    initSwiper();
                 } catch (e) { alert("Izin kamera ditolak 🎥"); }
             };
 

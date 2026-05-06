@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- MediaPipe Vision - Library AI Paling Stabil -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/vision_bundle.js" crossorigin="anonymous"></script>
+    <!-- MediaPipe Vision Library - Mesin Utama Filter -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js" crossorigin="anonymous"></script>
 
     <style>
         :root { --pink: #ff85a2; --cream: #fdf5e6; --dark-pink: #ff4d79; --brown: #8d6e63; }
@@ -36,7 +36,7 @@
 
         .btn-back-floating {
             position: fixed; top: 25px; left: 20px; z-index: 9500;
-            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
             border: 2px solid white; color: var(--dark-pink);
             padding: 8px 15px; border-radius: 50px; font-weight: bold;
             display: none; cursor: pointer;
@@ -53,7 +53,6 @@
         .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
         .card::after { content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 40px; height: 15px; background: rgba(255, 133, 162, 0.6); z-index: 30; }
 
-        /* Posisi Kartu Board */
         .p1 { top: 18%; left: 10%; transform: rotate(-5deg); }
         .p2 { top: 15%; right: 10%; transform: rotate(5deg); }
         .p3 { top: 35%; left: 35%; transform: rotate(-3deg); }
@@ -74,32 +73,38 @@
 
         /* MODE KAMERA */
         #camera-ucapan-container { position: fixed; inset: 0; z-index: 18000; display: none; flex-direction: column; align-items: center; background: #000; }
-        #cam-preview-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; transform: scaleX(-1); } /* Mirror Global */
+        
+        #cam-preview-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
+        #cam-preview-wrapper.mirrored { transform: scaleX(-1); }
 
-        #ucapan-video, #toga-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        #toga-canvas { z-index: 10; pointer-events: none; }
+        /* Layering Video & Canvas */
+        #ucapan-video, #toga-canvas { 
+            position: absolute; top: 50%; left: 50%; 
+            width: 100%; height: 100%; object-fit: cover; 
+            transform: translate(-50%, -50%);
+        }
+        #toga-canvas { z-index: 2; pointer-events: none; }
 
         .btn-toggle-toga {
-            position: absolute; top: 20px; right: 20px; width: 55px; height: 55px;
-            border-radius: 50%; background: rgba(0, 0, 0, 0.5); border: 2px solid white;
-            color: white; font-size: 1.8rem; cursor: pointer; z-index: 100;
+            position: absolute; top: 20px; right: 20px; width: 50px; height: 50px;
+            border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid white;
+            color: white; font-size: 1.5rem; cursor: pointer; z-index: 100;
             display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);
         }
         .btn-toggle-toga.active { background: var(--pink); border-color: #ffd700; transform: scale(1.1); }
-        #toga-img { display: none; }
 
         .ucapan-header {
-            position: absolute; top: 10%; z-index: 20; font-family: 'Caveat'; font-size: 2.5rem; color: white;
-            padding: 8px 25px; border-radius: 50px; background: rgba(0, 0, 0, 0.4); border: 2px solid white;
-            text-align: center; width: 85%; pointer-events: none;
+            position: absolute; top: 8%; z-index: 10; font-family: 'Caveat'; font-size: 2.5rem; color: white;
+            padding: 10px 20px; border-radius: 50px; background: rgba(0, 0, 0, 0.4); border: 2px solid white;
+            text-align: center; width: 90%; max-width: 400px; pointer-events: none;
         }
 
-        .swiper { position: absolute; bottom: 8%; width: 100%; height: 260px; z-index: 20; padding-bottom: 20px; }
+        .swiper { position: absolute; bottom: 8%; width: 100%; height: 260px; z-index: 10; padding-bottom: 20px; }
         .swiper-slide { width: 150px; height: 195px; display: flex; justify-content: center; align-items: center; }
-        .polaroid-frame { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; height: 100%; }
-        .polaroid-frame img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; }
+        .polaroid-frame { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; height: 100%; cursor: pointer; }
+        .polaroid-frame img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; pointer-events: none; }
         
-        .btn-camera-ctrl { position: absolute; z-index: 100; background: rgba(0,0,0,0.5); color: white; border: 1.5px solid white; border-radius: 30px; font-weight: bold; padding: 10px 20px; backdrop-filter: blur(10px); }
+        .btn-camera-ctrl { position: absolute; z-index: 20; background: rgba(0,0,0,0.4); color: white; border: 1.5px solid white; border-radius: 30px; font-weight: bold; padding: 10px 20px; backdrop-filter: blur(10px); }
         .btn-close-ucapan { top: 25px; left: 20px; } 
         .btn-switch-camera { bottom: 25px; right: 25px; font-size: 1.2rem; }
 
@@ -114,16 +119,21 @@
     <button class="btn-back-floating" id="global-back-btn" onclick="backToModeSelection()">← Kembali</button>
     <div id="music-control" onclick="toggleMusic()"><div class="vinyl" id="vinyl"></div></div>
     <div id="close-area" onclick="backToBoard()" style="position:fixed; inset:0; z-index:4000; display:none;"></div>
-    <button id="global-reveal-btn" style="position:fixed; bottom:12%; left:50%; transform:translate(-50%, 0) scale(0); background:var(--dark-pink); color:white; border:none; padding:12px 25px; border-radius:50px; font-weight:bold; z-index:8000; display:none;" onclick="openQuiz()">Buka Pesan Sayang 💌</button>
+    <button id="global-reveal-btn" style="position:fixed; bottom:10%; left:50%; transform:translate(-50%, 0) scale(0); background:var(--dark-pink); color:white; border:none; padding:12px 25px; border-radius:50px; font-weight:bold; z-index:8000; display:none;" onclick="openQuiz()">Buka Pesan Sayang 💌</button>
 
+    <!-- Mode Kamera Container -->
     <div id="camera-ucapan-container">
-        <div id="cam-preview-wrapper">
-            <video id="ucapan-video" autoplay playsinline></video>
+        <div id="cam-preview-wrapper" class="mirrored">
+            <video id="ucapan-video" autoplay playsinline muted></video>
             <canvas id="toga-canvas"></canvas>
         </div>
-        <img id="toga-img" src="https://raw.githubusercontent.com/Bangyokoji/ArthaFreshSejahtera/926161e17b68b8e1af9d9bd02bd9bc85ee269ecb/1778046603580.png" crossorigin="anonymous">
-        <button class="btn-toggle-toga" onclick="toggleTogaFilter()">🎓</button>
-        <div class="ucapan-header">CONGRATULATIONS SAYANG</div>
+        
+        <!-- Gambar Toga Link Direct (lh3) -->
+        <img id="toga-img" src="https://lh3.googleusercontent.com/d/1hw_oRjhdWnVsyIjabhjYhiilB9SLCL-7" crossorigin="anonymous" style="display:none;">
+        
+        <button class="btn-toggle-toga active" onclick="toggleTogaFilter()">🎓</button>
+
+        <div class="ucapan-header">HAPPY GRADUATION SAYANG</div>
         <div class="swiper mySwiper">
             <div class="swiper-wrapper" id="ucapan-wrapper"></div>
             <div class="swiper-pagination"></div>
@@ -132,6 +142,7 @@
         <button class="btn-camera-ctrl btn-close-ucapan" onclick="stopUcapan()">← Kembali</button>
     </div>
 
+    <!-- UI Screens -->
     <div id="sc1" class="screen">
         <div class="glass-card">
             <div style="font-size:80px; cursor:pointer;" onclick="toSc2()">📩</div>
@@ -147,6 +158,7 @@
         </div>
     </div>
 
+    <!-- Board Dunia Kita -->
     <div id="board">
         <h1 class="title">Our Beautiful Chapter ❤️</h1>
         <div class="card p1" data-q="Kamu bangga sama diri sendiri hari ini? 🎓" onclick="zoomCard(this)">
@@ -165,9 +177,9 @@
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh"></div>
             <div class="message-box"><p>Bobo nyenyak, mimpiin aku ya! 😴💤</p></div>
         </div>
-        <div class="card p5" data-q="jangan ke seringan mbotok yang,mbok kamu sering mbotok?" onclick="zoomCard(this)">
+        <div class="card p5" data-q="jangan ke seringan mbotok yang?" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d"></div>
-            <div class="message-box"><p>hihihi becanda sayangg,kamu ngga mandi be tetep cakep,tapi tetep mandi penting buat kebersihan😊🌸</p></div>
+            <div class="message-box"><p>hihihi becanda sayangg, kamu tetep cakep! 😊🌸</p></div>
         </div>
         <div class="card p6" data-q="Semangat buat kedepannya? 🤝" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP"></div>
@@ -181,6 +193,7 @@
 
     <!-- Modals -->
     <div id="message-popup"><p id="msg-text"></p><button class="btn-main" onclick="document.getElementById('message-popup').style.display='none'" style="width:auto; padding:8px 20px;">Tutup 💖</button></div>
+    
     <div id="quiz-overlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.2); display:none; justify-content:center; align-items:center; z-index:9500; backdrop-filter:blur(2px);">
         <div class="quiz-card" style="background:white; padding:25px; border-radius:25px; text-align:center; width:280px; border:4px solid var(--pink);">
             <p id="quiz-text" style="margin-bottom:20px; font-weight:bold;"></p>
@@ -195,6 +208,7 @@
             </div>
         </div>
     </div>
+    
     <div id="letter-overlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.98); display:none; z-index:11000; flex-direction:column; align-items:center; justify-content:center; padding:30px; text-align:center;"><div class="letter-content" id="typewriter-text" style="font-family:'Caveat'; font-size:1.6rem; color:#5d4037; line-height:1.4;"></div><button class="btn-main" onclick="location.reload()" style="margin-top:25px; width:auto;">Mainkan Lagi ❤️</button></div>
 
     <script>
@@ -204,44 +218,33 @@
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
 
-        // ==================== SISTEM AI FILTER TOGA (ULTRA ROBUST) ====================
-        let faceLandmarker;
-        let isAIReady = false;
-
-        async function initAI() {
-            try {
-                const vision = await mediapipe.tasks.vision;
-                const filesetResolver = await vision.FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
-                faceLandmarker = await vision.FaceLandmarker.createFromOptions(filesetResolver, {
-                    baseOptions: {
-                        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
-                        delegate: "GPU"
-                    },
-                    runningMode: "VIDEO",
-                    numFaces: 1
-                });
-                isAIReady = true;
-                console.log("Sistem AI Toga Berhasil Dimuat!");
-            } catch (e) {
-                console.error("Gagal memuat AI:", e);
-            }
-        }
-        initAI(); // Jalankan sejak awal halaman dibuka
-
+        // Partikel Hati & Bunga
         function createHeart(e) {
             const heart = document.createElement('div');
-            heart.className = 'petal click-heart'; heart.innerHTML = '❤️';
-            heart.style.cssText = `position:fixed; pointer-events:none; color:var(--dark-pink); font-size:20px; z-index:12000; left:${e.clientX}px; top:${e.clientY}px; animation:floatUp 1s forwards;`;
+            heart.className = 'petal'; heart.innerHTML = '❤️';
+            heart.style.cssText = `position:fixed; pointer-events:none; color:var(--dark-pink); font-size:20px; z-index:22000; left:${e.clientX}px; top:${e.clientY}px;`;
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1000);
+            gsap.to(heart, { y: -100, opacity: 0, duration: 1, onComplete: () => heart.remove() });
         }
 
+        setInterval(() => {
+            if (document.getElementById('camera-ucapan-container').style.display === 'flex') return;
+            const petals = ['🌸', '❤️', '✨'];
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.innerHTML = petals[Math.floor(Math.random() * petals.length)];
+            petal.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(petal);
+            gsap.to(petal, { y: window.innerHeight + 50, x: "random(-50, 50)", rotation: 360, duration: 5, ease: "none", onComplete: () => petal.remove() });
+        }, 700);
+
+        // Fungsi UI Dasar
         function toggleMusic() { audio.paused ? (audio.play(), vinyl.classList.add('spinning')) : (audio.pause(), vinyl.classList.remove('spinning')); }
         function toSc2() { gsap.to("#sc1", { opacity:0, duration:0.5, onComplete:() => { document.getElementById('sc1').style.display='none'; document.getElementById('sc2').style.display='flex'; }}); }
         
         function startApp() { 
             audio.play().catch(()=>{}); document.getElementById('music-control').style.display='flex'; document.getElementById('global-back-btn').style.display='block'; vinyl.classList.add('spinning');
-            gsap.to([bgVideo, "#sc2"], { opacity:0, duration:0.8, onComplete:() => { bgVideo.style.display='none'; document.getElementById('sc2').style.display='none'; document.getElementById('board').style.display='block'; gsap.from(".card", { y: 1000, rotation: 45, stagger: 0.1, duration: 1, ease: "back.out" }); }});
+            gsap.to([bgVideo, "#sc2"], { opacity:0, duration:0.8, onComplete:() => { bgVideo.style.display='none'; document.getElementById('sc2').style.display='none'; document.getElementById('board').style.display='block'; gsap.from(".card", { y: 500, rotation: 45, stagger: 0.1, duration: 1, ease: "back.out" }); }});
         }
 
         function backToModeSelection() { 
@@ -260,25 +263,22 @@
         }
 
         function backToBoard() {
+            if (!currentActive) return;
             const el = currentActive; el.querySelector('.message-box').classList.remove('active');
             gsap.to("#global-reveal-btn", { scale:0, display:'none', duration:0.2 });
             gsap.to(el, { x:0, y:0, scale:1, rotation:"random(-10,10)", duration:0.5, onComplete:() => { el.style.zIndex="100"; currentActive=null; document.getElementById('close-area').style.display='none'; document.getElementById('global-back-btn').style.display='block'; }});
         }
 
+        function dodge(b) {
+            gsap.to(b, { x: (Math.random()-0.5)*200, y: (Math.random()-0.5)*200, duration: 0.2 });
+        }
+
         function openQuiz() {
-            const btnNo = document.getElementById('btnNo');
-            gsap.set(btnNo, { x: 0, y: 0 });
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
             document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none";
             document.getElementById('quiz-overlay').style.display='flex';
-        }
-
-        function dodge(b) {
-            const randomX = (Math.random() - 0.5) * 250;
-            const randomY = (Math.random() - 0.5) * 250;
-            gsap.to(b, { x: randomX, y: randomY, duration: 0.2 });
         }
 
         function solveQuiz() { document.getElementById('quiz-overlay').style.display='none'; document.getElementById('global-reveal-btn').style.display="none"; currentActive.querySelector('.message-box').classList.add('active'); }
@@ -288,91 +288,110 @@
             let i=0; function type() { if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type();
         }
 
-        // ==================== LOGIKA KAMERA & TOGA ====================
+        // ==================== LOGIKA KAMERA & FILTER TOGA (INTEGRASI) ====================
         (function() {
+            let faceLandmarker;
             let cameraStream = null;
-            let togaEnabled = false;
+            let togaEnabled = true;
             let requestAnimationFrameId;
             let currentFacingMode = "user";
+            let lastVideoTime = -1;
 
             const videoEl = document.getElementById("ucapan-video");
             const togaCanvas = document.getElementById("toga-canvas");
             const togaCtx = togaCanvas.getContext("2d");
             const togaImg = document.getElementById("toga-img");
+            const previewWrapper = document.getElementById("cam-preview-wrapper");
+
+            // Inisialisasi MediaPipe
+            async function initAI() {
+                try {
+                    const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm");
+                    faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+                        baseOptions: {
+                            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
+                            delegate: "GPU"
+                        },
+                        runningMode: "VIDEO", numFaces: 1
+                    });
+                    console.log("AI System Loaded ✅");
+                } catch (e) { console.error("AI Init Error:", e); }
+            }
+            initAI();
 
             window.startUcapan = async function() {
                 try {
-                    if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } 
+                    if (cameraStream) stopUcapan();
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: currentFacingMode, width: 1280, height: 720 } 
                     });
-                    cameraStream = stream;
-                    videoEl.srcObject = stream;
+                    videoEl.srcObject = cameraStream;
                     
+                    videoEl.onloadedmetadata = () => {
+                        videoEl.play();
+                        togaCanvas.width = videoEl.videoWidth;
+                        togaCanvas.height = videoEl.videoHeight;
+                        renderLoop();
+                    };
+
+                    previewWrapper.className = currentFacingMode === "user" ? "mirrored" : "";
                     document.getElementById('sc2').style.display='none';
                     document.getElementById('bgVideo').style.display='none';
                     document.getElementById('camera-ucapan-container').style.display='flex';
-                    if (audio.paused) audio.play();
-                    vinyl.classList.add('spinning');
+                    
                     initSwiper();
-                } catch (e) { alert("Beri izin kamera ya sayang 🎥"); }
-            };
-
-            window.toggleTogaFilter = function() {
-                if (!isAIReady) return;
-                togaEnabled = !togaEnabled;
-                document.querySelector('.btn-toggle-toga').classList.toggle('active', togaEnabled);
-                if (togaEnabled) renderLoop();
-                else togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
+                } catch (e) { alert("Izin kamera ditolak 🎥"); }
             };
 
             function renderLoop() {
-                if (!togaEnabled || !faceLandmarker || videoEl.paused) return;
-                
-                // Pastikan Ukuran Canvas Sama dengan Video
-                if (videoEl.videoWidth > 0 && togaCanvas.width !== videoEl.videoWidth) {
-                    togaCanvas.width = videoEl.videoWidth;
-                    togaCanvas.height = videoEl.videoHeight;
-                }
-
-                const results = faceLandmarker.detectForVideo(videoEl, performance.now());
-                togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
-
-                if (results.faceLandmarks && results.faceLandmarks.length > 0) {
-                    const l = results.faceLandmarks[0];
-                    
-                    // Titik LandMark Penting: 10 (Dahi), 234 (Pipi L), 454 (Pipi R)
-                    const faceWidth = Math.hypot(l[454].x - l[234].x, l[454].y - l[234].y) * togaCanvas.width;
-                    const togaW = faceWidth * 2.2; // Ukuran Topi
-                    const togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
-                    
-                    // Kemiringan Kepala
-                    const angle = Math.atan2(l[263].y - l[33].y, l[263].x - l[33].x);
-
-                    togaCtx.save();
-                    togaCtx.translate(l[10].x * togaCanvas.width, l[10].y * togaCanvas.height);
-                    togaCtx.rotate(angle);
-                    // Gambar Toga (Offset ditarik ke atas dahi)
-                    togaCtx.drawImage(togaImg, -togaW / 2, -togaH * 0.98, togaW, togaH);
-                    togaCtx.restore();
+                if (!cameraStream) return;
+                if (videoEl.currentTime !== lastVideoTime) {
+                    lastVideoTime = videoEl.currentTime;
+                    togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
+                    if (togaEnabled && faceLandmarker) {
+                        const results = faceLandmarker.detectForVideo(videoEl, performance.now());
+                        if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+                            drawToga(results.faceLandmarks[0]);
+                        }
+                    }
                 }
                 requestAnimationFrameId = requestAnimationFrame(renderLoop);
             }
 
+            function drawToga(l) {
+                const cw = togaCanvas.width; const ch = togaCanvas.height;
+                // Landmark: 10 (Dahi), 234/454 (Pipi), 33/263 (Mata)
+                const faceWidth = Math.hypot((l[454].x - l[234].x) * cw, (l[454].y - l[234].y) * ch);
+                const togaW = faceWidth * 2.0;
+                const togaH = togaW * (togaImg.naturalHeight / togaImg.naturalWidth);
+                const angle = Math.atan2((l[263].y - l[33].y) * ch, (l[263].x - l[33].x) * cw);
+
+                togaCtx.save();
+                togaCtx.translate(l[10].x * cw, l[10].y * ch);
+                togaCtx.rotate(angle);
+                // Gambar Toga sedikit di atas landmark dahi (offset -0.85)
+                togaCtx.drawImage(togaImg, -togaW/2, -togaH * 0.85, togaW, togaH);
+                togaCtx.restore();
+            }
+
+            window.toggleTogaFilter = function() {
+                togaEnabled = !togaEnabled;
+                document.querySelector('.btn-toggle-toga').classList.toggle('active', togaEnabled);
+                if(!togaEnabled) togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
+            };
+
             window.switchCamera = function() {
                 currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
-                togaEnabled = false; 
-                document.querySelector('.btn-toggle-toga').classList.remove('active');
-                document.getElementById('cam-preview-wrapper').style.transform = (currentFacingMode === "user") ? "scaleX(-1)" : "scaleX(1)";
                 startUcapan();
             };
 
             window.stopUcapan = function() {
                 if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-                togaEnabled = false; cancelAnimationFrame(requestAnimationFrameId);
-                togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
+                cameraStream = null;
+                cancelAnimationFrame(requestAnimationFrameId);
                 document.getElementById('camera-ucapan-container').style.display='none';
-                document.getElementById('sc2').style.display='flex'; document.getElementById('bgVideo').style.display='block';
+                document.getElementById('sc2').style.display='flex';
+                document.getElementById('bgVideo').style.display='block';
             };
 
             function initSwiper() {

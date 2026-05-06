@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Congrats Thalitaa sayanggg 🎓❤️</title>
+    <title>Congrats Brat! 🎓❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Quicksand:wght@600&display=swap" rel="stylesheet">
     
     <!-- Library Utama -->
@@ -179,9 +179,9 @@
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh"></div>
             <div class="message-box"><p>Bobo nyenyak, mimpiin aku ya! 😴💤</p></div>
         </div>
-        <div class="card p5" data-q="jangan ke seringan mbotok yang,mbok kamu sering mbotok?" onclick="zoomCard(this)">
+        <div class="card p5" data-q="Lagi salting ya diliatin gini? 😊" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d"></div>
-            <div class="message-box"><p>hihihi becanda sayangg,kamu ngga mandi be tetep cakep,tapi tetep mandi penting buat kebersihan😊🌸</p></div>
+            <div class="message-box"><p>Muka salting kamu gemes banget! 😊🌸</p></div>
         </div>
         <div class="card p6" data-q="Semangat buat kedepannya? 🤝" onclick="zoomCard(this)">
             <div class="card-inner"><img src="https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP"></div>
@@ -294,7 +294,7 @@
 
         function showFinalLetter() {
             document.getElementById('letter-overlay').style.display = 'flex';
-            const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
+            const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, Brat! I love you so much! ✨🎓";
             let i = 0;
             function typeWriter() {
                 if (i < text.length) {
@@ -307,9 +307,8 @@
 
         function dodge(btn) { gsap.to(btn, { x: "random(-50, 50)", y: "random(-50, 50)", duration: 0.1 }); }
 
-        // ==================== MODE AR : FOTO POLAROID DI SEKITAR ====================
+        // ==================== MODE AR REVISI : JARAK PAS, ANIMASI, EFEK ====================
         (function() {
-            // Pesan cinta yang sama dengan di board
             const LOVE_MESSAGES = [
                 "Cie lulus! Proud of you sayang! 🎓✨",
                 "I love you more than anything! 😍❤️",
@@ -320,7 +319,6 @@
                 "Happy Graduation Sayang! I'm so proud! 🎓💖"
             ];
 
-            // Aset foto polaroid yang sama
             const PHOTO_ASSETS = [
                 "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
                 "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
@@ -333,7 +331,6 @@
 
             let arScene = null;
 
-            // Fungsi startAR dipanggil dari tombol di screen 2
             window.startAR = async function() {
                 const loader = document.getElementById('ar-loader');
                 loader.style.display = 'flex';
@@ -358,13 +355,11 @@
             };
 
             function setupARWorld(coords) {
-                // Sembunyikan screen 2 dan video
                 document.getElementById('sc2').style.display = 'none';
                 bgVideo.style.display = 'none';
                 document.getElementById('music-control').style.display = 'flex';
                 audio.play();
 
-                // Buat scene AR
                 arScene = document.createElement('a-scene');
                 arScene.setAttribute('vr-mode-ui', 'enabled: false');
                 arScene.setAttribute('arjs', 'sourceType: webcam; videoSettings: {facingMode:"environment"}; debugUIEnabled: false;');
@@ -374,37 +369,69 @@
                 camera.setAttribute('gps-camera', 'rotation-reader: true');
                 arScene.appendChild(camera);
 
-                // Tempatkan 7 foto polaroid melingkar pada radius ~1.5 meter
                 const total = 7;
-                const radiusDeg = 0.000015; // ~1.5 meter
+                // JARAK DISESUAIKAN: 2-3 meter (0.00002 - 0.00003 deg)
+                // Dibuat bervariasi agar tidak menumpuk
+                const baseRadiusDeg = 0.000025; // ~2.5 meter
+
                 for (let i = 0; i < total; i++) {
-                    const angle = (i / total) * Math.PI * 2;
-                    const lat = coords.latitude + Math.cos(angle) * radiusDeg;
-                    const lng = coords.longitude + Math.sin(angle) * radiusDeg;
+                    const angle = (i / total) * Math.PI * 2 + (Math.random() * 0.5 - 0.25); // sedikit variasi sudut
+                    const radiusVar = baseRadiusDeg * (0.8 + Math.random() * 0.6); // 80%-140% dari radius dasar
+                    const lat = coords.latitude + Math.cos(angle) * radiusVar;
+                    const lng = coords.longitude + Math.sin(angle) * radiusVar;
 
                     const entity = document.createElement('a-entity');
                     entity.setAttribute('gps-entity-place', `latitude: ${lat}; longitude: ${lng};`);
 
-                    // Foto polaroid
+                    // --- BINGKAI PUTIH POLAROID (PLANE DI BELAKANG FOTO) ---
+                    const frame = document.createElement('a-plane');
+                    frame.setAttribute('width', '1.35');
+                    frame.setAttribute('height', '1.75');
+                    frame.setAttribute('color', '#ffffff');
+                    frame.setAttribute('position', '0 0 0');
+                    frame.setAttribute('look-at', '[gps-camera]');
+                    frame.setAttribute('material', 'shader: flat; side: double');
+                    entity.appendChild(frame);
+
+                    // --- FOTO UTAMA ---
                     const photo = document.createElement('a-image');
                     photo.setAttribute('src', PHOTO_ASSETS[i]);
                     photo.setAttribute('width', '1.2');
                     photo.setAttribute('height', '1.6');
+                    photo.setAttribute('position', '0 0 0');
                     photo.setAttribute('look-at', '[gps-camera]');
-                    photo.setAttribute('scale', '3.5 4.8 3.5'); // ukuran cukup besar
-                    photo.setAttribute('material', 'transparent: true; opacity: 0.95');
-                    // Animasi mengambang halus
-                    photo.setAttribute('animation', 'property: position; to: 0 0.15 0; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine');
+                    photo.setAttribute('material', 'transparent: true; opacity: 0.95; shader: standard');
+                    // Animasi muncul dramatis menggunakan A-Frame animation (scale dari 0 ke ukuran normal)
+                    photo.setAttribute('animation__appear', 'property: scale; from: 0.1 0.1 0.1; to: 3.8 5.2 3.8; dur: 900; easing: easeOutElastic; delay: 300');
+                    // Animasi mengambang lembut setelah muncul
+                    photo.setAttribute('animation__float', 'property: position; to: 0 0.1 0; dir: alternate; dur: 2500; loop: true; easing: easeInOutSine; delay: 1500');
+
+                    entity.appendChild(photo);
+
+                    // --- PARTIKEL SPARKLE DI SEKITAR FOTO ---
+                    for (let j = 0; j < 8; j++) {
+                        const spark = document.createElement('a-sphere');
+                        spark.setAttribute('radius', '0.02');
+                        spark.setAttribute('color', j % 2 === 0 ? '#ffd700' : '#ff85a2');
+                        spark.setAttribute('position', `${(Math.random() - 0.5) * 1.8} ${(Math.random() - 0.5) * 2.2} ${(Math.random() - 0.5) * 0.5}`);
+                        spark.setAttribute('animation', `property: opacity; from: 0.2; to: 0.9; dir: alternate; dur: ${600 + Math.random() * 800}; loop: true; delay: ${Math.random() * 1000}`);
+                        spark.setAttribute('look-at', '[gps-camera]');
+                        entity.appendChild(spark);
+                    }
 
                     // Klik foto -> tampilkan pesan
                     photo.addEventListener('click', (e) => {
                         e.stopPropagation();
                         document.getElementById('ar-msg-text').innerText = LOVE_MESSAGES[i];
                         document.getElementById('ar-message-popup').style.display = 'block';
-                        confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 }, colors: ['#ff85a2', '#ffd700', '#fff'] });
+                        // Confetti lebih meriah
+                        confetti({ particleCount: 60, spread: 80, origin: { y: 0.7 }, colors: ['#ff85a2', '#ffd700', '#fff'] });
+                        // Animasi kecil pada foto saat diklik (jitter)
+                        if (photo.object3D) {
+                            gsap.to(photo.object3D.scale, { x: 4.2, y: 5.6, z: 4.2, duration: 0.2, yoyo: true, repeat: 1 });
+                        }
                     });
 
-                    entity.appendChild(photo);
                     arScene.appendChild(entity);
                 }
 
@@ -412,7 +439,6 @@
                 document.getElementById('ar-ui-layer').style.display = 'flex';
             }
 
-            // Fungsi stopAR
             window.stopAR = function() {
                 if (arScene) {
                     arScene.parentNode.removeChild(arScene);
@@ -420,10 +446,8 @@
                 }
                 document.getElementById('ar-ui-layer').style.display = 'none';
                 document.getElementById('ar-message-popup').style.display = 'none';
-                // Kembali ke screen 2
                 document.getElementById('sc2').style.display = 'flex';
                 bgVideo.style.display = 'block';
-                // Hentikan video stream AR jika ada
                 const video = document.querySelector('video[data-arjs-video-fallback]');
                 if (video) video.remove();
             };

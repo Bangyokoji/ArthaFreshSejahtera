@@ -85,21 +85,22 @@
             object-fit: cover;
         }
         
-        #static-toga {
+        /* Toga yang bisa di-drag & pinch */
+        #draggable-toga {
             position: absolute;
-            top: 15%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
+            transform: translate(-50%, -50%) scale(1);
+            width: 120px;
             height: auto;
-            z-index: 50;
-            pointer-events: none;
-            animation: floatToga 3s infinite alternate ease-in-out;
+            z-index: 100;
+            touch-action: none; /* penting untuk drag */
+            cursor: grab;
             filter: drop-shadow(0 0 10px #ffd700);
+            transition: none;
         }
-        @keyframes floatToga {
-            0% { transform: translateX(-50%) translateY(0px); }
-            100% { transform: translateX(-50%) translateY(-8px); }
+        #draggable-toga:active {
+            cursor: grabbing;
         }
 
         .ucapan-header {
@@ -137,7 +138,8 @@
             <canvas id="toga-canvas"></canvas>
         </div>
         
-        <img id="static-toga" src="https://raw.githubusercontent.com/Bangyokoji/For-you/7e6e04cf14e68d5925fccf66264853b3ad754b7d/1778046603580.png" crossorigin="anonymous">
+        <!-- Toga Interaktif -->
+        <img id="draggable-toga" src="https://raw.githubusercontent.com/Bangyokoji/For-you/7e6e04cf14e68d5925fccf66264853b3ad754b7d/1778046603580.png" crossorigin="anonymous">
 
         <div class="ucapan-header">CONGRATULATIONS SAYANG</div>
         <div class="swiper mySwiper">
@@ -202,15 +204,17 @@
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
 
-        // ==================== KAMERA SEDERHANA (NO AI, STABIL) ====================
+        // ==================== KAMERA + TOGA INTERAKTIF ====================
         (function() {
             let cameraStream = null;
             const videoEl = document.getElementById("ucapan-video");
             const togaCanvas = document.getElementById("toga-canvas");
             const togaCtx = togaCanvas.getContext("2d");
             const previewWrapper = document.getElementById("cam-preview-wrapper");
+            const togaImg = document.getElementById("draggable-toga");
             let animationFrameId;
 
+            // --- Sparkle effect ---
             const sparkles = [];
             for (let i = 0; i < 30; i++) {
                 sparkles.push({
@@ -245,6 +249,80 @@
                 animationFrameId = requestAnimationFrame(drawSparkles);
             }
 
+            // --- Drag & Pinch Logic ---
+            function initTogaInteraction() {
+                let isDragging = false;
+                let startX, startY;
+                let initialLeft, initialTop;
+                let initialScale = 1;
+                let initialPinchDistance = 0;
+                let currentScale = 1;
+                let currentLeft = window.innerWidth / 2 - togaImg.offsetWidth / 2;
+                let currentTop = window.innerHeight / 2 - togaImg.offsetHeight / 2;
+
+                // Set posisi awal
+                togaImg.style.left = currentLeft + 'px';
+                togaImg.style.top = currentTop + 'px';
+                togaImg.style.transform = `scale(${currentScale})`;
+
+                // Pointer events (mouse & touch)
+                togaImg.addEventListener('pointerdown', (e) => {
+                    if (e.pointerType === 'mouse' && e.button !== 0) return;
+                    e.preventDefault();
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    initialLeft = currentLeft;
+                    initialTop = currentTop;
+                    togaImg.setPointerCapture(e.pointerId);
+                });
+
+                window.addEventListener('pointermove', (e) => {
+                    if (!isDragging) return;
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    currentLeft = initialLeft + dx;
+                    currentTop = initialTop + dy;
+                    togaImg.style.left = currentLeft + 'px';
+                    togaImg.style.top = currentTop + 'px';
+                });
+
+                window.addEventListener('pointerup', (e) => {
+                    isDragging = false;
+                });
+
+                // Pinch zoom
+                togaImg.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        initialPinchDistance = getPinchDistance(e.touches[0], e.touches[1]);
+                        initialScale = currentScale;
+                    }
+                });
+
+                togaImg.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        const newDist = getPinchDistance(e.touches[0], e.touches[1]);
+                        if (initialPinchDistance > 0) {
+                            currentScale = initialScale * (newDist / initialPinchDistance);
+                            currentScale = Math.min(Math.max(currentScale, 0.4), 3.0); // batas ukuran
+                            togaImg.style.transform = `scale(${currentScale})`;
+                        }
+                    }
+                });
+
+                togaImg.addEventListener('touchend', (e) => {
+                    if (e.touches.length < 2) {
+                        initialPinchDistance = 0;
+                    }
+                });
+
+                function getPinchDistance(touch1, touch2) {
+                    const dx = touch1.clientX - touch2.clientX;
+                    const dy = touch1.clientY - touch2.clientY;
+                    return Math.sqrt(dx * dx + dy * dy);
+                }
+            }
+
             window.startUcapan = async function() {
                 try {
                     if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
@@ -263,6 +341,7 @@
 
                     initSwiper();
                     drawSparkles();
+                    initTogaInteraction();
                 } catch (e) {
                     alert("Izin kamera ditolak 🎥");
                 }

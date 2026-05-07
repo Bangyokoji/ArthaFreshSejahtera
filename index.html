@@ -117,39 +117,41 @@
 
         #message-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 21000; display: none; text-align: center; width: 80%; max-width: 280px; border: 3px solid var(--pink); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* ========== GALERI WISUDA ========== */
+        /* ========== GALERI WISUDA (REVISI) ========== */
         #galeri-overlay {
             position: fixed; inset: 0; z-index: 22000; display: none;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             flex-direction: column; align-items: center; justify-content: center;
             padding: 30px 15px;
         }
         .galeri-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 30px;
-            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 35px;
+            padding: 30px 20px 20px;
             width: 90%;
             max-width: 380px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+            position: relative;
         }
         .galeri-teks {
             font-family: 'Caveat', cursive;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #fff;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(255, 77, 121, 0.5);
-            line-height: 1.4;
+            margin-bottom: 20px;
+            text-shadow: 0 0 12px rgba(255, 77, 121, 0.7);
+            line-height: 1.6;
+            letter-spacing: 0.5px;
         }
         .galeri-swiper {
             width: 100%;
-            height: 300px;
-            padding-bottom: 30px;
+            height: 280px;
+            padding-bottom: 35px;
         }
         .galeri-swiper .swiper-slide {
             display: flex;
@@ -157,12 +159,13 @@
             align-items: center;
         }
         .galeri-photo {
-            width: 180px;
-            height: 240px;
+            width: 160px;
+            height: 215px;
             background: white;
-            padding: 10px 10px 30px 10px;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 8px 8px 28px 8px;
+            border-radius: 10px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
         }
         .galeri-photo img {
             width: 100%;
@@ -172,19 +175,25 @@
         }
         .galeri-btn-close {
             position: absolute;
-            top: 25px;
-            right: 25px;
+            top: 20px;
+            right: 20px;
             z-index: 30;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            border: 1.5px solid white;
+            border: 1px solid rgba(255,255,255,0.5);
             color: white;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-weight: bold;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 1rem;
+            font-weight: bold;
+            transition: 0.2s;
         }
+        .galeri-btn-close:hover { background: rgba(255, 77, 121, 0.5); }
     </style>
 </head>
 <body onclick="createHeart(event)">
@@ -213,15 +222,14 @@
         <button class="btn-camera-ctrl btn-switch-camera" onclick="switchCamera()">🔄</button>
     </div>
 
-    <!-- Overlay Galeri Wisuda -->
+    <!-- Overlay Galeri Wisuda (Revisi) -->
     <div id="galeri-overlay">
-        <button class="galeri-btn-close" onclick="tutupGaleri()">✕ Tutup</button>
         <div class="galeri-card">
             <div class="galeri-teks">
-                Selamat Wisuda Sayangku! 🎓✨<br><br>
+                ✨ Selamat Wisuda, Sayangku! 🎓<br>
                 Aku selalu berdoa yang terbaik untukmu.<br>
                 Semoga ilmunya berkah, masa depanmu cerah,<br>
-                dan setiap langkahmu selalu diridhoi Allah.<br><br>
+                dan setiap langkahmu selalu diridhoi Allah.<br>
                 I'm so proud of you! ❤️
             </div>
             <div class="swiper galeri-swiper">
@@ -229,6 +237,7 @@
                 <div class="swiper-pagination"></div>
             </div>
         </div>
+        <button class="galeri-btn-close" onclick="tutupGaleri()">✕</button>
     </div>
 
     <!-- Screen 1 & 2 -->
@@ -301,13 +310,7 @@
 
             const sparkles = [];
             for (let i = 0; i < 30; i++) {
-                sparkles.push({
-                    x: Math.random(),
-                    y: Math.random(),
-                    size: Math.random() * 2 + 1,
-                    speed: Math.random() * 0.5 + 0.2,
-                    opacity: Math.random()
-                });
+                sparkles.push({ x: Math.random(), y: Math.random(), size: Math.random() * 2 + 1, speed: Math.random() * 0.5 + 0.2, opacity: Math.random() });
             }
 
             function drawSparkles() {
@@ -318,10 +321,7 @@
                 
                 sparkles.forEach(s => {
                     s.y -= s.speed;
-                    if (s.y < -0.1) {
-                        s.y = 1.1;
-                        s.x = Math.random();
-                    }
+                    if (s.y < -0.1) { s.y = 1.1; s.x = Math.random(); }
                     const px = s.x * togaCanvas.width;
                     const py = s.y * togaCanvas.height;
                     togaCtx.fillStyle = `rgba(255, 215, 0, ${s.opacity})`;
@@ -329,7 +329,6 @@
                     togaCtx.arc(px, py, s.size, 0, Math.PI * 2);
                     togaCtx.fill();
                 });
-                
                 animationFrameId = requestAnimationFrame(drawSparkles);
             }
 
@@ -338,20 +337,12 @@
             }
 
             function initTogaInteraction() {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                togaState.x = w/2 - 60;
-                togaState.y = h/2 - 60;
-                togaState.scale = 1;
-                togaState.rotation = 0;
+                const w = window.innerWidth, h = window.innerHeight;
+                togaState.x = w/2 - 60; togaState.y = h/2 - 60; togaState.scale = 1; togaState.rotation = 0;
                 updateToga();
 
-                let dragging = false;
-                let startX, startY, startStateX, startStateY;
-                let initDist = 0;
-                let initAngle = 0;
-                let startScale = 1;
-                let startRotation = 0;
+                let dragging = false, startX, startY, startStateX, startStateY;
+                let initDist = 0, initAngle = 0, startScale = 1, startRotation = 0;
 
                 function getDist(t1, t2) { return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY); }
                 function getAngle(t1, t2) { return Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180 / Math.PI; }
@@ -359,9 +350,7 @@
                 togaImg.addEventListener('pointerdown', (e) => {
                     if (e.pointerType === 'mouse' && e.button !== 0) return;
                     e.preventDefault();
-                    dragging = true;
-                    startX = e.clientX; startY = e.clientY;
-                    startStateX = togaState.x; startStateY = togaState.y;
+                    dragging = true; startX = e.clientX; startY = e.clientY; startStateX = togaState.x; startStateY = togaState.y;
                     togaImg.setPointerCapture(e.pointerId);
                 });
 
@@ -378,10 +367,8 @@
                     if (e.touches.length === 2) {
                         e.preventDefault();
                         const t1 = e.touches[0], t2 = e.touches[1];
-                        initDist = getDist(t1, t2);
-                        initAngle = getAngle(t1, t2);
-                        startScale = togaState.scale;
-                        startRotation = togaState.rotation;
+                        initDist = getDist(t1, t2); initAngle = getAngle(t1, t2);
+                        startScale = togaState.scale; startRotation = togaState.rotation;
                     }
                 });
 
@@ -389,11 +376,8 @@
                     if (e.touches.length === 2) {
                         e.preventDefault();
                         const t1 = e.touches[0], t2 = e.touches[1];
-                        const newDist = getDist(t1, t2);
-                        const newAngle = getAngle(t1, t2);
-                        if (initDist > 0) {
-                            togaState.scale = Math.min(Math.max(startScale * (newDist / initDist), 0.2), 5.0);
-                        }
+                        const newDist = getDist(t1, t2), newAngle = getAngle(t1, t2);
+                        if (initDist > 0) { togaState.scale = Math.min(Math.max(startScale * (newDist / initDist), 0.2), 5.0); }
                         togaState.rotation = startRotation + (newAngle - initAngle);
                         updateToga();
                     }
@@ -406,9 +390,7 @@
                 currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
                 if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
-                    });
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } });
                     cameraStream = stream;
                     videoEl.srcObject = stream;
                     previewWrapper.classList.toggle("mirrored", currentFacingMode === "user");
@@ -418,20 +400,15 @@
             window.startUcapan = async function() {
                 try {
                     if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
-                    });
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } });
                     cameraStream = stream;
                     videoEl.srcObject = stream;
                     previewWrapper.classList.toggle('mirrored', currentFacingMode === "user");
                     document.getElementById('sc2').style.display = 'none';
                     document.getElementById('bgVideo').style.display = 'none';
                     document.getElementById('camera-ucapan-container').style.display = 'flex';
-                    if (audio.paused) audio.play();
-                    vinyl.classList.add('spinning');
-                    initSwiper();
-                    drawSparkles();
-                    initTogaInteraction();
+                    if (audio.paused) audio.play(); vinyl.classList.add('spinning');
+                    initSwiper(); drawSparkles(); initTogaInteraction();
                 } catch (e) { alert("Izin kamera ditolak 🎥"); }
             };
 
@@ -444,22 +421,14 @@
             };
 
             function initSwiper() {
-                const PHOTO_ASSETS = [
-                    "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5","https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1","https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM","https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh","https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d","https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP","https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9","https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC","https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK","https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K","https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h","https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe","https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam","https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"
-                ];
-                const wrapper = document.getElementById('ucapan-wrapper');
-                wrapper.innerHTML = '';
+                const PHOTO_ASSETS = ["https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5","https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1","https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM","https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh","https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d","https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP","https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9","https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC","https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK","https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K","https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h","https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe","https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam","https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"];
+                const wrapper = document.getElementById('ucapan-wrapper'); wrapper.innerHTML = '';
                 PHOTO_ASSETS.forEach((src, idx) => {
-                    const slide = document.createElement('div');
-                    slide.className = 'swiper-slide';
+                    const slide = document.createElement('div'); slide.className = 'swiper-slide';
                     slide.innerHTML = `<div class="polaroid-frame" onclick="showMsg(${idx})"><img src="${src}"></div>`;
                     wrapper.appendChild(slide);
                 });
-                new Swiper(".mySwiper", {
-                    effect: "coverflow", centeredSlides: true, slidesPerView: "auto", loop: true,
-                    coverflowEffect: { rotate: 30, stretch: 0, depth: 100, modifier: 1, slideShadows: true },
-                    pagination: { el: ".swiper-pagination", clickable: true }
-                });
+                new Swiper(".mySwiper", { effect: "coverflow", centeredSlides: true, slidesPerView: "auto", loop: true, coverflowEffect: { rotate: 30, stretch: 0, depth: 100, modifier: 1, slideShadows: true }, pagination: { el: ".swiper-pagination", clickable: true } });
             }
 
             window.showMsg = function(idx) {
@@ -470,42 +439,45 @@
             };
         })();
 
-        // ==================== GALERI WISUDA ====================
+        // ==================== GALERI WISUDA (REVISI) ====================
         (function() {
             const GALERI_PHOTOS = [
-                "https://drive.google.com/uc?export=view&id=1oTUasXgoJByzhauv-XwuCGe74yYc3sKf",
-                "https://drive.google.com/uc?export=view&id=1tauWbtDHhIYVOA6uTJKDt0580G74fwtn",
-                "https://drive.google.com/uc?export=view&id=1hReor1qhGhbirnyHic-1rLPhRGSDRrRY",
-                "https://drive.google.com/uc?export=view&id=1lO3Hh88qhT53k7RDDIuFxIfVvtm1gwPk",
-                "https://drive.google.com/uc?export=view&id=1lxsiwAEX_F8ec6O3fMYLFaf3etzd-ypn"
+                "https://drive.google.com/uc?export=download&id=1oTUasXgoJByzhauv-XwuCGe74yYc3sKf",
+                "https://drive.google.com/uc?export=download&id=1tauWbtDHhIYVOA6uTJKDt0580G74fwtn",
+                "https://drive.google.com/uc?export=download&id=1hReor1qhGhbirnyHic-1rLPhRGSDRrRY",
+                "https://drive.google.com/uc?export=download&id=1lO3Hh88qhT53k7RDDIuFxIfVvtm1gwPk",
+                "https://drive.google.com/uc?export=download&id=1lxsiwAEX_F8ec6O3fMYLFaf3etzd-ypn"
             ];
-
             let galeriSwiper = null;
+
+            function buildGaleri() {
+                const wrapper = document.getElementById('galeri-wrapper');
+                wrapper.innerHTML = '';
+                GALERI_PHOTOS.forEach((src, i) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
+                    slide.innerHTML = `<div class="galeri-photo"><img src="${src}" alt="Foto ${i+1}" onerror="this.src='https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5'; this.onerror=null;"></div>`;
+                    wrapper.appendChild(slide);
+                });
+                if (galeriSwiper) galeriSwiper.destroy();
+                galeriSwiper = new Swiper(".galeri-swiper", {
+                    effect: "coverflow",
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: "auto",
+                    loop: true,
+                    coverflowEffect: { rotate: 0, stretch: 30, depth: 150, modifier: 1, slideShadows: false },
+                    pagination: { el: ".galeri-swiper .swiper-pagination", clickable: true }
+                });
+            }
 
             window.bukaGaleri = function() {
                 document.getElementById('sc2').style.display = 'none';
                 document.getElementById('bgVideo').style.display = 'none';
                 document.getElementById('galeri-overlay').style.display = 'flex';
-                
-                if (!galeriSwiper) {
-                    const wrapper = document.getElementById('galeri-wrapper');
-                    wrapper.innerHTML = '';
-                    GALERI_PHOTOS.forEach(src => {
-                        const slide = document.createElement('div');
-                        slide.className = 'swiper-slide';
-                        slide.innerHTML = `<div class="galeri-photo"><img src="${src}" alt="foto wisuda"></div>`;
-                        wrapper.appendChild(slide);
-                    });
-                    galeriSwiper = new Swiper(".galeri-swiper", {
-                        effect: "cards",
-                        grabCursor: true,
-                        loop: true,
-                        pagination: { el: ".galeri-swiper .swiper-pagination", clickable: true }
-                    });
-                }
-                
-                if (audio.paused) audio.play();
-                vinyl.classList.add('spinning');
+                if (!galeriSwiper) buildGaleri();
+                else galeriSwiper.slideToLoop(0, 0);
+                if (audio.paused) audio.play(); vinyl.classList.add('spinning');
                 confetti({ particleCount: 50, spread: 70, origin: { y: 0.5 } });
             };
 
@@ -514,25 +486,23 @@
                 document.getElementById('sc2').style.display = 'flex';
                 document.getElementById('bgVideo').style.display = 'block';
             };
+
+            // pre-build on first load
+            setTimeout(buildGaleri, 300);
         })();
 
         // ==================== FITUR UTAMA ====================
         function createHeart(e) {
-            const heart = document.createElement('div');
-            heart.className = 'petal click-heart'; heart.innerHTML = '❤️';
+            const heart = document.createElement('div'); heart.className = 'petal click-heart'; heart.innerHTML = '❤️';
             heart.style.cssText = `position:fixed; pointer-events:none; color:var(--dark-pink); font-size:20px; z-index:12000; left:${e.clientX}px; top:${e.clientY}px; animation:floatUp 1s forwards;`;
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1000);
+            document.body.appendChild(heart); setTimeout(() => heart.remove(), 1000);
         }
 
         setInterval(() => {
             if (document.getElementById('camera-ucapan-container').style.display === 'flex') return;
             const petals = ['🌸', '❤️', '✨'];
-            const petal = document.createElement('div');
-            petal.className = 'petal';
-            petal.innerHTML = petals[Math.floor(Math.random() * petals.length)];
-            petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.top = '-10%';
+            const petal = document.createElement('div'); petal.className = 'petal'; petal.innerHTML = petals[Math.floor(Math.random() * petals.length)];
+            petal.style.left = Math.random() * 100 + 'vw'; petal.style.top = '-10%';
             document.body.appendChild(petal);
             gsap.to(petal, { y: window.innerHeight + 50, x: "random(-50, 50)", rotation: 360, duration: 5, ease: "none", onComplete: () => petal.remove() });
         }, 700);
@@ -554,35 +524,27 @@
         }
 
         function zoomCard(el) {
-            if (currentActive) return;
-            currentActive = el; el.style.zIndex = "5000"; document.getElementById('global-back-btn').style.display = 'none'; document.getElementById('close-area').style.display = 'block';
+            if (currentActive) return; currentActive = el; el.style.zIndex = "5000"; document.getElementById('global-back-btn').style.display = 'none'; document.getElementById('close-area').style.display = 'block';
             if (el.id === 'card7') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             gsap.to(el, { x: (window.innerWidth/2 - el.getBoundingClientRect().left - 52), y: (window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale: 2.3, rotation: 0, duration: 0.6, ease: "power2.out", onComplete: () => {
-                const btn = document.getElementById('global-reveal-btn');
-                btn.style.display = "block";
-                gsap.to(btn, { scale: 1, duration: 0.3 });
+                const btn = document.getElementById('global-reveal-btn'); btn.style.display = "block"; gsap.to(btn, { scale: 1, duration: 0.3 });
             }});
         }
 
         function backToBoard() {
-            if (!currentActive) return;
-            const el = currentActive;
+            if (!currentActive) return; const el = currentActive;
             el.querySelector('.message-box').classList.remove('active');
             const btn = document.getElementById('global-reveal-btn');
             gsap.to(btn, { scale: 0, duration: 0.2, onComplete: () => btn.style.display = "none" });
             gsap.to(el, { x: 0, y: 0, scale: 1, rotation: "random(-10, 10)", duration: 0.5, onComplete: () => {
-                el.style.zIndex = "100"; currentActive = null;
-                document.getElementById('close-area').style.display = 'none'; document.getElementById('global-back-btn').style.display = 'block';
+                el.style.zIndex = "100"; currentActive = null; document.getElementById('close-area').style.display = 'none'; document.getElementById('global-back-btn').style.display = 'block';
             }});
         }
 
-        function dodge(b) {
-            gsap.to(b, { x: (Math.random() - 0.5) * 250, y: (Math.random() - 0.5) * 250, duration: 0.2, ease: "power2.out" });
-        }
+        function dodge(b) { gsap.to(b, { x: (Math.random() - 0.5) * 250, y: (Math.random() - 0.5) * 250, duration: 0.2, ease: "power2.out" }); }
 
         function openQuiz() {
-            const btnNo = document.getElementById('btnNo');
-            if (btnNo) gsap.set(btnNo, { x: 0, y: 0 });
+            const btnNo = document.getElementById('btnNo'); if (btnNo) gsap.set(btnNo, { x: 0, y: 0 });
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
@@ -595,9 +557,7 @@
         function showFinalLetter() {
             document.getElementById('letter-overlay').style.display = 'flex';
             const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
-            let i = 0;
-            function type() { if (i < text.length) { document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; i++; setTimeout(type, 50); } }
-            type();
+            let i = 0; function type() { if (i < text.length) { document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; i++; setTimeout(type, 50); } } type();
         }
     </script>
 </body>

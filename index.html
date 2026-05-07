@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Congrats Thalitaa sayanggg 🎓❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Quicksand:wght@600&display=swap" rel="stylesheet">
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -117,57 +117,19 @@
 
         #message-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 21000; display: none; text-align: center; width: 80%; max-width: 280px; border: 3px solid var(--pink); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* CSS untuk fitur Kirim Pesan ke Langit & Polaroid Universe */
-        #kirim-pesan-overlay {
-            position: fixed; inset: 0; z-index: 25000; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+        /* GAME MBOTOK ATTACK */
+        #mbotok-overlay {
+            position: fixed; inset: 0; z-index: 25000; background: #ffe4ec;
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'Quicksand', sans-serif; overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
         }
-        .stars-layer {
-            position: absolute; inset: 0; pointer-events: none;
-            background: radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-                        radial-gradient(2px 2px at 100px 70px, #fff, transparent),
-                        radial-gradient(3px 3px at 200px 150px, #ffd700, transparent),
-                        radial-gradient(2px 2px at 280px 40px, #fff, transparent);
-            background-size: 300px 300px;
-            animation: twinkle 4s infinite alternate;
-        }
-        @keyframes twinkle {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
-        }
-        .pesan-input-box {
-            position: relative; z-index: 10; background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px); border-radius: 25px; padding: 30px;
-            width: 85%; max-width: 360px; text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .pesan-textarea {
-            width: 100%; height: 100px; border-radius: 15px; border: none;
-            padding: 15px; font-family: 'Quicksand', sans-serif; font-size: 1rem;
-            resize: none; background: rgba(255,255,255,0.8); color: #333;
-            margin-bottom: 15px;
-        }
-        .pesan-flying-text {
-            position: absolute; z-index: 20; font-family: 'Caveat', cursive;
-            font-size: 1.8rem; color: #ffd700; text-shadow: 0 0 15px #ff4d79;
-            pointer-events: none; opacity: 0;
-        }
-        #zoom-polaroid-container {
-            position: absolute; inset: 0; z-index: 30; display: none;
-            justify-content: center; align-items: center; background: rgba(0,0,0,0.9);
-        }
-        .zoom-photo {
-            width: 160px; height: 200px; background: white; padding: 8px 8px 25px 8px;
-            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            cursor: pointer; position: absolute; left: 50%; top: 50%;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .zoom-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
-        .final-message {
-            position: absolute; z-index: 40; text-align: center; color: white;
-            font-family: 'Caveat', cursive; font-size: 2.5rem; display: none;
-        }
+        .mbotok-header { font-size: 2rem; color: var(--dark-pink); margin-bottom: 10px; }
+        .mbotok-photo { width: 120px; height: 160px; background: white; padding: 8px 8px 25px 8px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .mbotok-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .botol { position: absolute; font-size: 3rem; cursor: pointer; z-index: 10; transition: transform 0.2s; }
+        .botol:active { transform: scale(1.5); }
+        .mbotok-info { margin-top: 20px; font-size: 1.2rem; color: #333; }
+        .mbotok-btn { background: var(--pink); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin: 10px; }
     </style>
 </head>
 <body onclick="createHeart(event)">
@@ -196,18 +158,12 @@
         <button class="btn-camera-ctrl btn-switch-camera" onclick="switchCamera()">🔄</button>
     </div>
 
-    <!-- OVERLAY KIRIM PESAN KE LANGIT -->
-    <div id="kirim-pesan-overlay">
-        <div class="stars-layer"></div>
-        <div class="pesan-input-box" id="input-box">
-            <h2 style="color:white; font-family:'Caveat'; margin-bottom:15px;">Tulis Pesan Cintamu 💌</h2>
-            <textarea id="pesan-textarea" class="pesan-textarea" placeholder="Tulis sesuatu untuk Thalitaa..." maxlength="100"></textarea>
-            <button class="btn-main" onclick="kirimPesanKeLangit()" style="background:linear-gradient(135deg, #ffd700, #ff4d79);">KIRIM KE LANGIT 🕊️</button>
-            <button class="btn-main" onclick="tutupKirimPesan()" style="margin-top:10px; background:rgba(255,255,255,0.2);">← Kembali</button>
-        </div>
-        <div id="zoom-polaroid-container"></div>
-        <div class="pesan-flying-text" id="flying-text"></div>
-        <div class="final-message" id="final-message"></div>
+    <!-- Game MBOTOK OVERLAY -->
+    <div id="mbotok-overlay">
+        <h2 class="mbotok-header">Lindungi Fotonya! 🛡️</h2>
+        <div class="mbotok-photo" id="mbotok-photo"><img id="mbotok-img" src="" alt="foto"></div>
+        <div class="mbotok-info">Nyawa: <span id="nyawa">3</span> | Waktu: <span id="waktu">30</span>s</div>
+        <button class="mbotok-btn" onclick="tutupMbotok()">← Kembali</button>
     </div>
 
     <!-- Screen 1 & 2 -->
@@ -223,7 +179,7 @@
             <h2 style="font-family:'Caveat'; font-size:2.2rem; color:#5d4037;">Siapkan hatimu ya? 🧸</h2>
             <button class="btn-main" onclick="startApp()">MASUK KE DUNIA KITA ✨</button>
             <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ff85a2); margin-top:10px;" onclick="startUcapan()">KARTU UCAPAN KAMERA 💌</button>
-            <button class="btn-main" style="background:linear-gradient(135deg, #ffd700, #ff4d79); margin-top:10px;" onclick="bukaKirimPesan()">KIRIM PESAN KE LANGIT 🕊️</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ffd700); margin-top:10px;" onclick="bukaMbotok()">MBOTOK ATTACK 🧼</button>
         </div>
     </div>
 
@@ -274,10 +230,11 @@
             const togaCtx = togaCanvas.getContext("2d");
             const previewWrapper = document.getElementById("cam-preview-wrapper");
             const togaImg = document.getElementById("draggable-toga");
-            let currentFacingMode = "user";
+            let currentFacingMode = "user"; // default depan
             let animationFrameId;
             let togaState = { x: 0, y: 0, scale: 1, rotation: 0 };
 
+            // Sparkles
             const sparkles = [];
             for (let i = 0; i < 30; i++) {
                 sparkles.push({
@@ -317,6 +274,7 @@
             }
 
             function initTogaInteraction() {
+                // initial posisi tengah
                 const w = window.innerWidth;
                 const h = window.innerHeight;
                 togaState.x = w/2 - 60;
@@ -327,6 +285,8 @@
 
                 let dragging = false;
                 let startX, startY, startStateX, startStateY;
+
+                // Pinch/rotate variables
                 let initDist = 0;
                 let initAngle = 0;
                 let startScale = 1;
@@ -363,6 +323,7 @@
                     dragging = false;
                 });
 
+                // Two-finger gestures
                 togaImg.addEventListener('touchstart', (e) => {
                     if (e.touches.length === 2) {
                         e.preventDefault();
@@ -401,6 +362,7 @@
 
             window.switchCamera = async function() {
                 currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+                // Restart stream dengan mode baru
                 if (cameraStream) {
                     cameraStream.getTracks().forEach(t => t.stop());
                 }
@@ -410,6 +372,7 @@
                     });
                     cameraStream = stream;
                     videoEl.srcObject = stream;
+                    // Toggle mirror
                     if (currentFacingMode === "user") {
                         previewWrapper.classList.add("mirrored");
                     } else {
@@ -513,9 +476,9 @@
             };
         })();
 
-        // ==================== FITUR KIRIM PESAN KE LANGIT + POLAROID UNIVERSE ====================
+        // ==================== GAME MBOTOK ATTACK ====================
         (function() {
-            const ZOOM_PHOTOS = [
+            const MBOTOK_PHOTOS = [
                 "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
                 "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
                 "https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM",
@@ -525,137 +488,95 @@
                 "https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9"
             ];
 
-            let infiniteZoomStep = 0;
-            let currentZoomPhoto = null;
+            let nyawa = 3;
+            let waktu = 30;
+            let botolInterval, timerInterval;
+            let gameAktif = false;
 
-            window.bukaKirimPesan = function() {
+            window.bukaMbotok = function() {
                 document.getElementById('sc2').style.display = 'none';
                 document.getElementById('bgVideo').style.display = 'none';
-                document.getElementById('kirim-pesan-overlay').style.display = 'flex';
-                resetPesanUI();
+                document.getElementById('mbotok-overlay').style.display = 'flex';
+                
+                const randomFoto = MBOTOK_PHOTOS[Math.floor(Math.random() * MBOTOK_PHOTOS.length)];
+                document.getElementById('mbotok-img').src = randomFoto;
+                
+                nyawa = 3;
+                waktu = 30;
+                updateHUD();
+                gameAktif = true;
+                
+                botolInterval = setInterval(munculkanBotol, 800);
+                timerInterval = setInterval(() => {
+                    waktu--;
+                    updateHUD();
+                    if (waktu <= 0) menang();
+                }, 1000);
             };
 
-            window.tutupKirimPesan = function() {
-                document.getElementById('kirim-pesan-overlay').style.display = 'none';
+            function munculkanBotol() {
+                if (!gameAktif) return;
+                
+                const botol = document.createElement('div');
+                botol.className = 'botol';
+                botol.innerHTML = '🧴';
+                botol.style.position = 'absolute';
+                const dariKiri = Math.random() > 0.5;
+                botol.style.left = dariKiri ? '-50px' : (window.innerWidth + 50) + 'px';
+                botol.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+                document.getElementById('mbotok-overlay').appendChild(botol);
+                
+                const targetX = window.innerWidth / 2 - 60;
+                const targetY = window.innerHeight / 2 - 80;
+                gsap.to(botol, { x: targetX - parseFloat(botol.style.left), y: targetY - parseFloat(botol.style.top), duration: 2, ease: "power1.in", onComplete: () => {
+                    if (botol.parentNode) {
+                        botol.remove();
+                        if (gameAktif) {
+                            nyawa--;
+                            updateHUD();
+                            gsap.to('#mbotok-photo', { x: 10, duration: 0.1, yoyo: true, repeat: 3 });
+                            if (nyawa <= 0) kalah();
+                        }
+                    }
+                }});
+                
+                botol.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!gameAktif) return;
+                    botol.remove();
+                    confetti({ particleCount: 20, spread: 40, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight } });
+                });
+            }
+
+            function updateHUD() {
+                document.getElementById('nyawa').innerText = nyawa;
+                document.getElementById('waktu').innerText = waktu;
+            }
+
+            function menang() {
+                gameAktif = false;
+                clearInterval(botolInterval);
+                clearInterval(timerInterval);
+                alert('🎉 Kamu berhasil! Mbotok pun tak bisa menghalangi cinta kita! ❤️');
+                tutupMbotok();
+            }
+
+            function kalah() {
+                gameAktif = false;
+                clearInterval(botolInterval);
+                clearInterval(timerInterval);
+                alert('💔 Foto terkena mbotok! Tapi jangan lupa mandi ya, Sayang... 🚿');
+                tutupMbotok();
+            }
+
+            window.tutupMbotok = function() {
+                gameAktif = false;
+                clearInterval(botolInterval);
+                clearInterval(timerInterval);
+                document.getElementById('mbotok-overlay').style.display = 'none';
                 document.getElementById('sc2').style.display = 'flex';
                 document.getElementById('bgVideo').style.display = 'block';
-                resetPesanUI();
             };
-
-            function resetPesanUI() {
-                document.getElementById('input-box').style.display = 'block';
-                document.getElementById('zoom-polaroid-container').style.display = 'none';
-                document.getElementById('zoom-polaroid-container').innerHTML = '';
-                document.getElementById('flying-text').style.opacity = '0';
-                document.getElementById('final-message').style.display = 'none';
-                document.getElementById('pesan-textarea').value = '';
-                infiniteZoomStep = 0;
-                currentZoomPhoto = null;
-            }
-
-            window.kirimPesanKeLangit = function() {
-                const pesan = document.getElementById('pesan-textarea').value.trim();
-                if (pesan === '') {
-                    alert('Tulis pesan dulu ya, sayang! ❤️');
-                    return;
-                }
-
-                // Sembunyikan input box
-                const inputBox = document.getElementById('input-box');
-                gsap.to(inputBox, { opacity: 0, scale: 0.8, duration: 0.5, onComplete: () => {
-                    inputBox.style.display = 'none';
-                }});
-
-                // Animasi pesan terbang
-                const flyingText = document.getElementById('flying-text');
-                flyingText.innerText = pesan;
-                flyingText.style.opacity = '1';
-                flyingText.style.left = '50%';
-                flyingText.style.top = '60%';
-                flyingText.style.transform = 'translate(-50%, -50%) scale(1)';
-                
-                gsap.to(flyingText, {
-                    top: '-20%',
-                    scale: 0.5,
-                    opacity: 0,
-                    duration: 3,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        flyingText.style.opacity = '0';
-                        mulaiInfiniteZoom();
-                    }
-                });
-
-                // Confetti saat kirim
-                confetti({ particleCount: 80, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85a2', '#fff'] });
-            };
-
-            function mulaiInfiniteZoom() {
-                const container = document.getElementById('zoom-polaroid-container');
-                container.style.display = 'flex';
-                infiniteZoomStep = 0;
-                tampilkanFotoZoom();
-            }
-
-            function tampilkanFotoZoom() {
-                const container = document.getElementById('zoom-polaroid-container');
-                container.innerHTML = '';
-                
-                const fotoSrc = ZOOM_PHOTOS[infiniteZoomStep % ZOOM_PHOTOS.length];
-                const div = document.createElement('div');
-                div.className = 'zoom-photo';
-                div.innerHTML = `<img src="${fotoSrc}" alt="foto">`;
-                div.style.transform = 'translate(-50%, -50%) scale(0.1)';
-                div.style.opacity = '0';
-                container.appendChild(div);
-
-                gsap.to(div, {
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.6,
-                    ease: "power2.out",
-                    onComplete: () => {
-                        currentZoomPhoto = div;
-                    }
-                });
-
-                div.addEventListener('click', () => {
-                    if (infiniteZoomStep >= ZOOM_PHOTOS.length - 1) {
-                        // Foto terakhir, tampilkan pesan akhir
-                        tampilkanPesanAkhir();
-                        return;
-                    }
-
-                    // Ledakkan foto dan tampilkan selanjutnya
-                    gsap.to(div, {
-                        scale: 2.5,
-                        opacity: 0,
-                        duration: 0.5,
-                        ease: "power2.in",
-                        onComplete: () => {
-                            infiniteZoomStep++;
-                            tampilkanFotoZoom();
-                            confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
-                        }
-                    });
-                });
-            }
-
-            function tampilkanPesanAkhir() {
-                const container = document.getElementById('zoom-polaroid-container');
-                gsap.to(container, { opacity: 0, duration: 0.5, onComplete: () => {
-                    container.style.display = 'none';
-                    const finalMsg = document.getElementById('final-message');
-                    finalMsg.style.display = 'block';
-                    finalMsg.innerHTML = `
-                        <p>Pesanmu telah sampai ke langit 🕊️</p>
-                        <p style="font-size:2rem; margin:20px 0;">You're my everything, Thalitaa ❤️</p>
-                        <button class="btn-main" onclick="tutupKirimPesan()" style="margin-top:20px;">← Kembali</button>
-                    `;
-                    gsap.from(finalMsg, { scale: 0.5, opacity: 0, duration: 0.6, ease: "back.out(1.7)" });
-                    confetti({ particleCount: 200, spread: 150, origin: { y: 0.4 }, colors: ['#ffd700', '#ff85a2', '#fff'] });
-                }});
-            }
         })();
 
         // ==================== FITUR UTAMA ====================
@@ -696,38 +617,16 @@
         }
 
         function zoomCard(el) {
-            if (currentActive) return;
-            currentActive = el;
-            el.style.zIndex = "5000";
-            document.getElementById('global-back-btn').style.display = 'none';
-            document.getElementById('close-area').style.display = 'block';
-            if (el.id === 'card7') {
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            }
-            gsap.to(el, { 
-                x: (window.innerWidth/2 - el.getBoundingClientRect().left - 52), 
-                y: (window.innerHeight/2 - el.getBoundingClientRect().top - 67), 
-                scale: 2.3, rotation: 0, duration: 0.6, ease: "power2.out",
-                onComplete: () => {
-                    const btn = document.getElementById('global-reveal-btn');
-                    btn.style.display = "block";
-                    gsap.to(btn, { scale: 1, duration: 0.3 });
-                }
-            });
+            if (currentActive) return; currentActive = el; el.style.zIndex="5000"; document.getElementById('global-back-btn').style.display='none'; document.getElementById('close-area').style.display='block';
+            if(el.id === 'card7') confetti({ particleCount:150, spread:70, origin:{y:0.6} });
+            gsap.to(el, { x:(window.innerWidth/2 - el.getBoundingClientRect().left - 52), y:(window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale:2.3, rotation:0, duration:0.6 });
+            gsap.to("#global-reveal-btn", { scale:1, display:'block', duration:0.3 });
         }
 
         function backToBoard() {
-            if (!currentActive) return;
-            const el = currentActive;
-            el.querySelector('.message-box').classList.remove('active');
-            const btn = document.getElementById('global-reveal-btn');
-            gsap.to(btn, { scale: 0, duration: 0.2, onComplete: () => btn.style.display = "none" });
-            gsap.to(el, { x: 0, y: 0, scale: 1, rotation: "random(-10, 10)", duration: 0.5, onComplete: () => {
-                el.style.zIndex = "100";
-                currentActive = null;
-                document.getElementById('close-area').style.display = 'none';
-                document.getElementById('global-back-btn').style.display = 'block';
-            }});
+            const el = currentActive; el.querySelector('.message-box').classList.remove('active');
+            gsap.to("#global-reveal-btn", { scale:0, display:'none', duration:0.2 });
+            gsap.to(el, { x:0, y:0, scale:1, rotation:"random(-10,10)", duration:0.5, onComplete:() => { el.style.zIndex="100"; currentActive=null; document.getElementById('close-area').style.display='none'; document.getElementById('global-back-btn').style.display='block'; }});
         }
 
         function dodge(b) {
@@ -737,41 +636,18 @@
         }
 
         function openQuiz() {
-            const btnNo = document.getElementById('btnNo');
-            if (btnNo) {
-                gsap.set(btnNo, { x: 0, y: 0 });
-            }
-            
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
             document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none";
-            document.getElementById('quiz-overlay').style.display = 'flex';
+            document.getElementById('quiz-overlay').style.display='flex';
         }
 
-        function solveQuiz() { 
-            document.getElementById('quiz-overlay').style.display = 'none'; 
-            document.getElementById('global-reveal-btn').style.display = "none"; 
-            currentActive.querySelector('.message-box').classList.add('active'); 
-        }
-
-        function sendRating(v) { 
-            window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); 
-            solveQuiz(); 
-            setTimeout(showFinalLetter, 2000); 
-        }
-
+        function solveQuiz() { document.getElementById('quiz-overlay').style.display='none'; document.getElementById('global-reveal-btn').style.display="none"; currentActive.querySelector('.message-box').classList.add('active'); }
+        function sendRating(v) { window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); solveQuiz(); setTimeout(showFinalLetter, 2000); }
         function showFinalLetter() {
-            document.getElementById('letter-overlay').style.display = 'flex'; 
-            const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
-            let i = 0; 
-            function type() { 
-                if (i < text.length) { 
-                    document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; 
-                    i++; setTimeout(type, 50); 
-                } 
-            } 
-            type();
+            document.getElementById('letter-overlay').style.display='flex'; const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
+            let i=0; function type() { if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type();
         }
     </script>
 </body>

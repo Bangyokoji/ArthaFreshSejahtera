@@ -14,6 +14,7 @@
   <style>
     :root { --pink: #ff85a2; --cream: #fdf5e6; --dark-pink: #ff4d79; --brown: #8d6e63; }
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
     body {
       background-color: var(--cream); font-family: 'Quicksand', sans-serif;
       overflow: hidden; height: 100vh; width: 100vw;
@@ -21,11 +22,24 @@
       background-size: cover; background-position: center;
     }
 
-    #bgVideo { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); object-fit: cover; z-index: 8500; display: block; }
+    #bgVideo {
+      position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
+      width: auto; height: auto; transform: translate(-50%, -50%);
+      object-fit: cover; z-index: 8500; display: block;
+    }
+
     .petal { position: fixed; top: -10%; z-index: 1; pointer-events: none; color: var(--pink); font-size: 1.5rem; }
-    .btn-back-floating { position: fixed; top: 25px; left: 20px; z-index: 9500; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border: 2px solid white; color: var(--dark-pink); padding: 8px 15px; border-radius: 50px; font-weight: bold; display: none; cursor: pointer; }
+
+    .btn-back-floating {
+      position: fixed; top: 25px; left: 20px; z-index: 9500;
+      background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
+      border: 2px solid white; color: var(--dark-pink);
+      padding: 8px 15px; border-radius: 50px; font-weight: bold;
+      display: none; cursor: pointer;
+    }
+
     .screen { position: fixed; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9000; background: transparent; padding: 20px; text-align: center; }
-    .glass-card { background: rgba(255,255,255,0.4); backdrop-filter: blur(8px); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.3); display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .glass-card { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); padding: 30px; border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; flex-direction: column; gap: 15px; align-items: center; }
     .btn-main { background: var(--pink); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; max-width: 260px; }
 
     #board { position: relative; width: 100%; height: 100%; display: none; z-index: 10; overflow: hidden; }
@@ -33,7 +47,7 @@
     .card { position: absolute; width: 105px; height: 135px; cursor: pointer; z-index: 100; }
     .card-inner { position: relative; width: 100%; height: 100%; background: white; padding: 6px 6px 18px 6px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
     .card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-    .card::after { content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 40px; height: 15px; background: rgba(255,133,162,0.6); z-index: 30; }
+    .card::after { content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 40px; height: 15px; background: rgba(255, 133, 162, 0.6); z-index: 30; }
 
     .p1 { top: 18%; left: 10%; transform: rotate(-5deg); } .p2 { top: 15%; right: 10%; transform: rotate(5deg); } .p3 { top: 35%; left: 35%; transform: rotate(-3deg); } .p4 { top: 52%; left: 8%; transform: rotate(7deg); } .p5 { top: 54%; right: 8%; transform: rotate(-6deg); } .p6 { top: 75%; left: 15%; transform: rotate(-4deg); } .p7 { top: 73%; right: 15%; transform: rotate(8deg); }
 
@@ -41,82 +55,90 @@
     .message-box.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     .message-box p { font-family: 'Caveat'; font-size: 1.2rem; font-weight: bold; text-align: center; color: #333; }
 
-    #music-control { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: none; }
+    #music-control { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: none; cursor: pointer; }
     .vinyl { width: 45px; height: 45px; background: #333; border-radius: 50%; border: 3px solid #444; display: flex; align-items: center; justify-content: center; }
     .vinyl::after { content: ""; width: 12px; height: 12px; background: var(--pink); border-radius: 50%; border: 2px solid white; }
     .spinning { animation: spin 3s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     /* MODE KAMERA */
-    #camera-ucapan-container { position: fixed; inset: 0; z-index: 18000; display: none; flex-direction: column; align-items: center; background: #000; }
-    #cam-preview-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
+    #camera-ucapan-container {
+      position: fixed; inset: 0; z-index: 18000; display: none;
+      flex-direction: column; align-items: center; background: #000;
+    }
+    #cam-preview-wrapper {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+      overflow: hidden;
+    }
     #cam-preview-wrapper.mirrored { transform: scaleX(-1); }
-    #ucapan-video, #toga-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-    #draggable-toga { position: absolute; top: 0; left: 0; width: 120px; height: auto; z-index: 100; touch-action: none; cursor: grab; filter: drop-shadow(0 0 12px #ffd700); transform-origin: 0 0; will-change: transform; }
+    #ucapan-video, #toga-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    #draggable-toga {
+      position: absolute; top: 0; left: 0; width: 120px; height: auto;
+      z-index: 100; touch-action: none; cursor: grab;
+      filter: drop-shadow(0 0 12px #ffd700); transform-origin: 0 0; will-change: transform;
+    }
     #draggable-toga:active { cursor: grabbing; }
-    .ucapan-header { position: absolute; top: 8%; z-index: 10; font-family: 'Caveat'; font-size: 2.5rem; color: white; padding: 10px 30px; border-radius: 50px; background: rgba(0,0,0,0.4); border: 2px solid white; text-align: center; width: 90%; max-width: 400px; pointer-events: none; }
-
+    .ucapan-header {
+      position: absolute; top: 8%; z-index: 10; font-family: 'Caveat'; font-size: 2.5rem;
+      color: white; padding: 10px 30px; border-radius: 50px;
+      background: rgba(0,0,0,0.4); border: 2px solid white;
+      text-align: center; width: 90%; max-width: 400px; pointer-events: none;
+    }
     .swiper { position: absolute; bottom: 8%; width: 100%; height: 260px; z-index: 10; padding-bottom: 20px; }
     .swiper-slide { width: 150px; height: 195px; display: flex; justify-content: center; align-items: center; }
     .polaroid-frame { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; height: 100%; cursor: pointer; }
     .polaroid-frame img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; pointer-events: none; }
-
     .btn-camera-ctrl { position: absolute; z-index: 20; background: rgba(0,0,0,0.4); color: white; border: 1.5px solid white; border-radius: 30px; font-weight: bold; padding: 10px 20px; backdrop-filter: blur(10px); cursor: pointer; }
     .btn-close-ucapan { top: 25px; left: 20px; } .btn-switch-camera { bottom: 25px; right: 25px; }
 
     #message-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 21000; display: none; text-align: center; width: 80%; max-width: 280px; border: 3px solid var(--pink); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-    /* ========== GALERI WISUDA SUPER ELEGAN ========== */
+    /* ========== GALERI WISUDA ========== */
     #galeri-overlay {
       position: fixed; inset: 0; z-index: 25000; display: none;
       background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      justify-content: center; align-items: center; padding: 20px;
+      justify-content: center; align-items: center; padding: 15px;
     }
-    .galeri-container {
-      width: 100%; max-width: 420px; background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-      border-radius: 40px; border: 1px solid rgba(255,255,255,0.5);
-      padding: 40px 25px 30px; position: relative; box-shadow: 0 40px 60px rgba(0,0,0,0.5);
-      text-align: center; animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    .galeri-card {
+      width: 100%; max-width: 380px; background: rgba(255,255,255,0.95);
+      border-radius: 35px; padding: 30px 20px 20px; position: relative;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.4); text-align: center;
+      animation: fadeInUp 0.6s ease;
     }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .galeri-close {
-      position: absolute; top: 18px; right: 18px; width: 40px; height: 40px;
-      background: rgba(255,255,255,0.2); border-radius: 50%; border: 1px solid rgba(255,255,255,0.6);
-      color: white; font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; z-index: 10;
+      position: absolute; top: 15px; right: 15px; width: 35px; height: 35px;
+      background: #ff4d79; border: none; border-radius: 50%; color: white;
+      font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 5px 15px rgba(255,77,121,0.4); transition: 0.2s;
     }
-    .galeri-close:hover { background: rgba(255,77,121,0.8); transform: scale(1.1); }
-    .galeri-icon { font-size: 3rem; margin-bottom: 10px; }
-    .galeri-text {
-      font-family: 'Caveat', cursive; font-size: 1.8rem; color: white;
-      text-shadow: 0 0 20px rgba(255,77,121,0.8); margin-bottom: 25px;
-      line-height: 1.4; letter-spacing: 0.5px;
-    }
-    .galeri-text small { display: block; font-size: 1.2rem; opacity: 0.9; margin-top: 8px; font-family: 'Quicksand', sans-serif; }
-    .galeri-carousel { width: 100%; height: 320px; margin-top: 5px; }
-    .galeri-carousel .swiper-slide { display: flex; justify-content: center; align-items: center; }
+    .galeri-icon { font-size: 3rem; margin-bottom: 5px; }
+    .galeri-title { font-family: 'Caveat', cursive; font-size: 2rem; color: #5d4037; }
+    .galeri-msg { font-size: 0.9rem; color: #666; margin: 10px 0 20px; line-height: 1.5; padding: 0 10px; }
+    .galeri-swiper { width: 100%; height: 250px; margin: 0 auto; }
+    .galeri-swiper .swiper-slide { display: flex; justify-content: center; align-items: center; }
     .galeri-photo {
-      width: 180px; height: 240px; background: white;
-      padding: 12px 12px 40px 12px; border-radius: 10px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4); transition: transform 0.3s;
+      width: 160px; height: 210px; background: white;
+      padding: 8px 8px 30px 8px; border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s;
     }
-    .galeri-photo img {
-      width: 100%; height: 100%; object-fit: cover; border-radius: 4px;
-      border: 1px solid #eee;
-    }
-    .galeri-pagination { position: relative; margin-top: 20px; }
+    .galeri-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+    .swiper-pagination-bullet-active { background: #ff4d79 !important; }
+    .galeri-footer { margin-top: 15px; font-family: 'Caveat', cursive; font-size: 1.2rem; color: #ff4d79; }
   </style>
 </head>
 <body onclick="createHeart(event)">
+
   <audio id="lagu" loop><source src="https://raw.githubusercontent.com/Bangyokoji/For-you/128404a69d31eac059a044f05b140b5055b8f3b0/Nadhif%20Basalamah%20-%20kota%20ini%20tak%20sama%20tanpamu%20(Official%20Lyric%20Video)%20-%20(320%20Kbps).mp3" type="audio/mpeg"></audio>
   <video id="bgVideo" autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/Bangyokoji/For-you/4c439865a73d44cb052f5814a22e5129ad0ec2c3/PinDown.io_@ginagliss1473_1777946922.mp4" type="video/mp4"></video>
 
   <button class="btn-back-floating" id="global-back-btn" onclick="backToModeSelection()">← Kembali</button>
   <div id="music-control" onclick="toggleMusic()"><div class="vinyl" id="vinyl"></div></div>
   <div id="close-area" onclick="backToBoard()" style="position:fixed; inset:0; z-index:4000; display:none;"></div>
-  <button id="global-reveal-btn" style="position:fixed; bottom:10%; left:50%; transform:translate(-50%,0) scale(0); background:var(--dark-pink); color:white; border:none; padding:12px 25px; border-radius:50px; font-weight:bold; z-index:8000; display:none;" onclick="openQuiz()">Buka Pesan Sayang 💌</button>
+  <button id="global-reveal-btn" style="position:fixed; bottom:10%; left:50%; transform:translate(-50%, 0) scale(0); background:var(--dark-pink); color:white; border:none; padding:12px 25px; border-radius:50px; font-weight:bold; z-index:8000; display:none;" onclick="openQuiz()">Buka Pesan Sayang 💌</button>
 
   <!-- Mode Kamera -->
   <div id="camera-ucapan-container">
@@ -128,19 +150,20 @@
     <button class="btn-camera-ctrl btn-switch-camera" onclick="switchCamera()">🔄</button>
   </div>
 
-  <!-- GALERI WISUDA SUPER ELEGAN -->
+  <!-- Galeri Wisuda -->
   <div id="galeri-overlay">
-    <div class="galeri-container">
-      <div class="galeri-close" onclick="tutupGaleri()">✕</div>
+    <div class="galeri-card">
+      <button class="galeri-close" onclick="tutupGaleri()">✕</button>
       <div class="galeri-icon">🎓✨</div>
-      <div class="galeri-text">
-        Selamat Wisuda, Thalitaa Sayangku!<br>
-        <small>Aku sangat bangga padamu. Semoga cita-citamu bersinar selalu. Tetaplah jadi bidadari hatiku. I love you! ❤️</small>
+      <div class="galeri-title">Thalitaa, Selamat Wisuda!</div>
+      <div class="galeri-msg">
+        Aku bangga banget sama kamu.<br>Semoga ilmunya berkah, cita-citamu setinggi langit.<br>Kamu pantas dapat yang terbaik.<br><b>I love you more than anything. ❤️</b>
       </div>
-      <div class="swiper galeri-carousel" id="galeriSwiperContainer">
+      <div class="swiper galeri-swiper" id="galeriSwiper">
         <div class="swiper-wrapper" id="galeriWrapper"></div>
-        <div class="swiper-pagination galeri-pagination"></div>
+        <div class="swiper-pagination"></div>
       </div>
+      <div class="galeri-footer">— from your biggest fan —</div>
     </div>
   </div>
 
@@ -152,8 +175,8 @@
     <div class="glass-card">
       <h2 style="font-family:'Caveat'; font-size:2.2rem; color:#5d4037;">Siapkan hatimu ya? 🧸</h2>
       <button class="btn-main" onclick="startApp()">MASUK KE DUNIA KITA ✨</button>
-      <button class="btn-main" style="background:linear-gradient(135deg,#ff4d79,#ff85a2); margin-top:10px;" onclick="startUcapan()">KARTU UCAPAN KAMERA 💌</button>
-      <button class="btn-main" style="background:linear-gradient(135deg,#ff4d79,#ffd700); margin-top:10px;" onclick="bukaGaleri()">GALERI WISUDA 🖼️</button>
+      <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ff85a2); margin-top:10px;" onclick="startUcapan()">KARTU UCAPAN KAMERA 💌</button>
+      <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ffd700); margin-top:10px;" onclick="bukaGaleri()">GALERI WISUDA 🖼️</button>
     </div>
   </div>
 
@@ -171,7 +194,7 @@
 
   <!-- Popup Pesan -->
   <div id="message-popup"><p id="msg-text"></p><button class="btn-main" onclick="document.getElementById('message-popup').style.display='none'" style="width:auto; padding:8px 20px;">Tutup 💖</button></div>
-
+  
   <div id="quiz-overlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.2); display:none; justify-content:center; align-items:center; z-index:9500; backdrop-filter:blur(2px);">
     <div class="quiz-card" style="background:white; padding:25px; border-radius:25px; text-align:center; width:280px; border:4px solid var(--pink);">
       <p id="quiz-text" style="margin-bottom:20px; font-weight:bold;"></p>
@@ -186,7 +209,7 @@
       </div>
     </div>
   </div>
-
+  
   <div id="letter-overlay" style="position:fixed; inset:0; background:rgba(255,255,255,0.98); display:none; z-index:11000; flex-direction:column; align-items:center; justify-content:center; padding:30px; text-align:center;"><div class="letter-content" id="typewriter-text" style="font-family:'Caveat'; font-size:1.6rem; color:#5d4037; line-height:1.4;"></div><button class="btn-main" onclick="location.reload()" style="margin-top:25px; width:auto;">Mainkan Lagi ❤️</button></div>
 
   <script>
@@ -196,7 +219,7 @@
     const vinyl = document.getElementById('vinyl');
     const bgVideo = document.getElementById('bgVideo');
 
-    // Kamera & Toga (tidak diubah)
+    // ==================== KAMERA + TOGA ====================
     (function() {
       let cameraStream = null;
       const videoEl = document.getElementById("ucapan-video");
@@ -207,93 +230,130 @@
       let currentFacingMode = "user";
       let animationFrameId;
       let togaState = { x: 0, y: 0, scale: 1, rotation: 0 };
+
       const sparkles = [];
-      for (let i=0;i<30;i++) sparkles.push({x:Math.random(),y:Math.random(),size:Math.random()*2+1,speed:Math.random()*0.5+0.2,opacity:Math.random()});
-      function drawSparkles() { if(videoEl.videoWidth===0)return; togaCanvas.width=videoEl.videoWidth; togaCanvas.height=videoEl.videoHeight; togaCtx.clearRect(0,0,togaCanvas.width,togaCanvas.height); sparkles.forEach(s=>{s.y-=s.speed;if(s.y<-0.1){s.y=1.1;s.x=Math.random();} const px=s.x*togaCanvas.width; const py=s.y*togaCanvas.height; togaCtx.fillStyle=`rgba(255,215,0,${s.opacity})`; togaCtx.beginPath(); togaCtx.arc(px,py,s.size,0,Math.PI*2); togaCtx.fill();}); animationFrameId=requestAnimationFrame(drawSparkles); }
-      function updateToga() { togaImg.style.transform=`translate(${togaState.x}px,${togaState.y}px) rotate(${togaState.rotation}deg) scale(${togaState.scale})`; }
-      function initTogaInteraction() { const w=window.innerWidth,h=window.innerHeight; togaState.x=w/2-60;togaState.y=h/2-60;togaState.scale=1;togaState.rotation=0;updateToga(); let dragging=false,startX,startY,startStateX,startStateY,initDist=0,initAngle=0,startScale=1,startRotation=0; function getDist(t1,t2){return Math.hypot(t1.clientX-t2.clientX,t1.clientY-t2.clientY)} function getAngle(t1,t2){return Math.atan2(t2.clientY-t1.clientY,t2.clientX-t1.clientX)*180/Math.PI} togaImg.addEventListener('pointerdown',(e)=>{if(e.pointerType==='mouse'&&e.button!==0)return; e.preventDefault(); dragging=true; startX=e.clientX;startY=e.clientY; startStateX=togaState.x;startStateY=togaState.y; togaImg.setPointerCapture(e.pointerId);}); window.addEventListener('pointermove',(e)=>{if(!dragging)return; togaState.x=startStateX+(e.clientX-startX);togaState.y=startStateY+(e.clientY-startY); updateToga();}); window.addEventListener('pointerup',()=>{dragging=false;}); togaImg.addEventListener('touchstart',(e)=>{if(e.touches.length===2){e.preventDefault();const t1=e.touches[0],t2=e.touches[1];initDist=getDist(t1,t2);initAngle=getAngle(t1,t2);startScale=togaState.scale;startRotation=togaState.rotation;}}); togaImg.addEventListener('touchmove',(e)=>{if(e.touches.length===2){e.preventDefault();const t1=e.touches[0],t2=e.touches[1];const newDist=getDist(t1,t2),newAngle=getAngle(t1,t2);if(initDist>0){togaState.scale=Math.min(Math.max(startScale*(newDist/initDist),0.2),5.0);} togaState.rotation=startRotation+(newAngle-initAngle);updateToga();}}); togaImg.addEventListener('touchend',()=>{initDist=0;}); }
-      window.switchCamera = async function() { currentFacingMode=currentFacingMode==="user"?"environment":"user"; if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop()); try{const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:currentFacingMode,width:{ideal:1280},height:{ideal:720}}}); cameraStream=stream; videoEl.srcObject=stream; previewWrapper.classList.toggle("mirrored",currentFacingMode==="user");}catch(e){alert("Gagal mengganti kamera")} };
-      window.startUcapan = async function() { try{ if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop()); const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:currentFacingMode,width:{ideal:1280},height:{ideal:720}}}); cameraStream=stream; videoEl.srcObject=stream; previewWrapper.classList.toggle('mirrored',currentFacingMode==="user"); document.getElementById('sc2').style.display='none'; document.getElementById('bgVideo').style.display='none'; document.getElementById('camera-ucapan-container').style.display='flex'; if(audio.paused)audio.play(); vinyl.classList.add('spinning'); initSwiper(); drawSparkles(); initTogaInteraction(); }catch(e){alert("Izin kamera ditolak 🎥")} };
-      window.stopUcapan = function() { if(cameraStream){cameraStream.getTracks().forEach(track=>track.stop());cameraStream=null;} cancelAnimationFrame(animationFrameId); document.getElementById('camera-ucapan-container').style.display='none'; document.getElementById('sc2').style.display='flex'; document.getElementById('bgVideo').style.display='block'; };
-      function initSwiper() { const PHOTO_ASSETS=["https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5","https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1","https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM","https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh","https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d","https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP","https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9","https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC","https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK","https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K","https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h","https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe","https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam","https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"]; const wrapper=document.getElementById('ucapan-wrapper'); wrapper.innerHTML=''; PHOTO_ASSETS.forEach((src,idx)=>{const slide=document.createElement('div');slide.className='swiper-slide';slide.innerHTML=`<div class="polaroid-frame" onclick="showMsg(${idx})"><img src="${src}"></div>`;wrapper.appendChild(slide);}); new Swiper(".mySwiper",{effect:"coverflow",centeredSlides:true,slidesPerView:"auto",loop:true,coverflowEffect:{rotate:30,stretch:0,depth:100,modifier:1,slideShadows:true},pagination:{el:".swiper-pagination",clickable:true}}); }
-      window.showMsg = function(idx) { const msgs=["Cie lulus! Proud of you sayang! 🎓✨","I love you more than anything! 😍❤️","Senyum kamu itu penyemangat aku. 😜❤️","Bobo nyenyak, mimpiin aku ya! 😴💤","Kamu tetep cakep meski belum mandi hihi 😊🌸","Aku selalu ada di samping kamu. 🏆💖","Happy Graduation Sayang! I'm so proud! 🎓💖","Masa depan kita cerah bareng ya sayang! ✨","Terima kasih sudah berjuang sampai sini! 💌","Kamu itu versi terbaik dalam hidupku. 🧸❤️","Jangan pernah capek buat jadi hebat ya! 💪","Hati aku cuma buat kamu selamanya. 🔐💖","Setiap detik sama kamu itu berharga banget. ⏳❤️","I Love You, Thalita Sayang! ♾️🎓"]; document.getElementById('msg-text').innerText=msgs[idx]; document.getElementById('message-popup').style.display='block'; confetti({particleCount:60,spread:70,origin:{y:0.8}}); };
+      for (let i = 0; i < 30; i++) sparkles.push({ x: Math.random(), y: Math.random(), size: Math.random() * 2 + 1, speed: Math.random() * 0.5 + 0.2, opacity: Math.random() });
+
+      function drawSparkles() {
+        if (videoEl.videoWidth === 0) return;
+        togaCanvas.width = videoEl.videoWidth; togaCanvas.height = videoEl.videoHeight;
+        togaCtx.clearRect(0, 0, togaCanvas.width, togaCanvas.height);
+        sparkles.forEach(s => {
+          s.y -= s.speed; if (s.y < -0.1) { s.y = 1.1; s.x = Math.random(); }
+          const px = s.x * togaCanvas.width; const py = s.y * togaCanvas.height;
+          togaCtx.fillStyle = `rgba(255,215,0,${s.opacity})`; togaCtx.beginPath(); togaCtx.arc(px, py, s.size, 0, Math.PI * 2); togaCtx.fill();
+        });
+        animationFrameId = requestAnimationFrame(drawSparkles);
+      }
+
+      function updateToga() { togaImg.style.transform = `translate(${togaState.x}px,${togaState.y}px) rotate(${togaState.rotation}deg) scale(${togaState.scale})`; }
+
+      function initTogaInteraction() {
+        const w = window.innerWidth, h = window.innerHeight;
+        togaState.x = w/2 - 60; togaState.y = h/2 - 60; togaState.scale = 1; togaState.rotation = 0; updateToga();
+        let dragging = false, startX, startY, startStateX, startStateY, initDist = 0, initAngle = 0, startScale = 1, startRotation = 0;
+        function getDist(t1,t2){ return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY); }
+        function getAngle(t1,t2){ return Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180 / Math.PI; }
+        togaImg.addEventListener('pointerdown', (e) => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          e.preventDefault(); dragging = true; startX = e.clientX; startY = e.clientY; startStateX = togaState.x; startStateY = togaState.y; togaImg.setPointerCapture(e.pointerId);
+        });
+        window.addEventListener('pointermove', (e) => { if (!dragging) return; togaState.x = startStateX + (e.clientX - startX); togaState.y = startStateY + (e.clientY - startY); updateToga(); });
+        window.addEventListener('pointerup', () => { dragging = false; });
+        togaImg.addEventListener('touchstart', (e) => { if (e.touches.length === 2) { e.preventDefault(); const t1 = e.touches[0], t2 = e.touches[1]; initDist = getDist(t1, t2); initAngle = getAngle(t1, t2); startScale = togaState.scale; startRotation = togaState.rotation; } });
+        togaImg.addEventListener('touchmove', (e) => { if (e.touches.length === 2) { e.preventDefault(); const t1 = e.touches[0], t2 = e.touches[1]; const newDist = getDist(t1, t2), newAngle = getAngle(t1, t2); if (initDist > 0) { togaState.scale = Math.min(Math.max(startScale * (newDist / initDist), 0.2), 5.0); } togaState.rotation = startRotation + (newAngle - initAngle); updateToga(); } });
+        togaImg.addEventListener('touchend', () => { initDist = 0; });
+      }
+
+      window.switchCamera = async function() {
+        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+        if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+        try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } }); cameraStream = stream; videoEl.srcObject = stream; previewWrapper.classList.toggle("mirrored", currentFacingMode === "user"); } catch (e) { alert("Gagal mengganti kamera"); }
+      };
+
+      window.startUcapan = async function() {
+        try {
+          if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } });
+          cameraStream = stream; videoEl.srcObject = stream; previewWrapper.classList.toggle('mirrored', currentFacingMode === "user");
+          document.getElementById('sc2').style.display = 'none'; document.getElementById('bgVideo').style.display = 'none'; document.getElementById('camera-ucapan-container').style.display = 'flex';
+          if (audio.paused) audio.play(); vinyl.classList.add('spinning');
+          initSwiper(); drawSparkles(); initTogaInteraction();
+        } catch (e) { alert("Izin kamera ditolak 🎥"); }
+      };
+
+      window.stopUcapan = function() { if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); cameraStream = null; } cancelAnimationFrame(animationFrameId); document.getElementById('camera-ucapan-container').style.display = 'none'; document.getElementById('sc2').style.display = 'flex'; document.getElementById('bgVideo').style.display = 'block'; };
+
+      function initSwiper() {
+        const PHOTO_ASSETS = ["https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5","https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1","https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM","https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh","https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d","https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP","https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9","https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC","https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK","https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K","https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h","https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe","https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam","https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"];
+        const wrapper = document.getElementById('ucapan-wrapper'); wrapper.innerHTML = '';
+        PHOTO_ASSETS.forEach((src, idx) => { const slide = document.createElement('div'); slide.className = 'swiper-slide'; slide.innerHTML = `<div class="polaroid-frame" onclick="showMsg(${idx})"><img src="${src}"></div>`; wrapper.appendChild(slide); });
+        new Swiper(".mySwiper", { effect: "coverflow", centeredSlides: true, slidesPerView: "auto", loop: true, coverflowEffect: { rotate: 30, stretch: 0, depth: 100, modifier: 1, slideShadows: true }, pagination: { el: ".swiper-pagination", clickable: true } });
+      }
+      window.showMsg = function(idx) { const msgs = ["Cie lulus! Proud of you sayang! 🎓✨","I love you more than anything! 😍❤️","Senyum kamu itu penyemangat aku. 😜❤️","Bobo nyenyak, mimpiin aku ya! 😴💤","Kamu tetep cakep meski belum mandi hihi 😊🌸","Aku selalu ada di samping kamu. 🏆💖","Happy Graduation Sayang! I'm so proud! 🎓💖","Masa depan kita cerah bareng ya sayang! ✨","Terima kasih sudah berjuang sampai sini! 💌","Kamu itu versi terbaik dalam hidupku. 🧸❤️","Jangan pernah capek buat jadi hebat ya! 💪","Hati aku cuma buat kamu selamanya. 🔐💖","Setiap detik sama kamu itu berharga banget. ⏳❤️","I Love You, Thalita Sayang! ♾️🎓"]; document.getElementById('msg-text').innerText = msgs[idx]; document.getElementById('message-popup').style.display = 'block'; confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 } }); };
     })();
 
-    // Galeri Wisuda Super Elegan
+    // ==================== GALERI WISUDA ====================
     (function() {
-      const GALERI_PHOTOS = [
-        "https://drive.google.com/uc?export=view&id=1oTUasXgoJByzhauv-XwuCGe74yYc3sKf",
-        "https://drive.google.com/uc?export=view&id=1tauWbtDHhIYVOA6uTJKDt0580G74fwtn",
-        "https://drive.google.com/uc?export=view&id=1hReor1qhGhbirnyHic-1rLPhRGSDRrRY",
-        "https://drive.google.com/uc?export=view&id=1lO3Hh88qhT53k7RDDIuFxIfVvtm1gwPk",
-        "https://drive.google.com/uc?export=view&id=1lxsiwAEX_F8ec6O3fMYLFaf3etzd-ypn"
+      const GALERI = [
+        "https://drive.google.com/uc?export=download&id=1oTUasXgoJByzhauv-XwuCGe74yYc3sKf",
+        "https://drive.google.com/uc?export=download&id=1tauWbtDHhIYVOA6uTJKDt0580G74fwtn",
+        "https://drive.google.com/uc?export=download&id=1hReor1qhGhbirnyHic-1rLPhRGSDRrRY",
+        "https://drive.google.com/uc?export=download&id=1lO3Hh88qhT53k7RDDIuFxIfVvtm1gwPk",
+        "https://drive.google.com/uc?export=download&id=1lxsiwAEX_F8ec6O3fMYLFaf3etzd-ypn"
       ];
-      // Fallback images (dari koleksi polaroid yang sudah pasti bisa diakses)
-      const FALLBACK_PHOTOS = [
+      const FALLBACK = [
         "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
         "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
         "https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM",
         "https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh",
         "https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d"
       ];
-      let galeriSwiper = null;
+      let swiper = null;
 
-      function initGaleriSwiper() {
-        if (galeriSwiper) galeriSwiper.destroy();
-        const wrapper = document.getElementById('galeriWrapper');
-        wrapper.innerHTML = '';
-        GALERI_PHOTOS.forEach((src, i) => {
-          const slide = document.createElement('div');
-          slide.className = 'swiper-slide';
-          slide.innerHTML = `<div class="galeri-photo"><img src="${src}" alt="Foto ${i+1}" onerror="this.onerror=null; this.src='${FALLBACK_PHOTOS[i]}';"></div>`;
-          wrapper.appendChild(slide);
-        });
-        galeriSwiper = new Swiper("#galeriSwiperContainer", {
-          effect: "coverflow",
-          grabCursor: true,
-          centeredSlides: true,
-          slidesPerView: "auto",
-          loop: true,
-          coverflowEffect: { rotate: 0, stretch: 20, depth: 250, modifier: 1, slideShadows: true },
-          pagination: { el: ".galeri-pagination", clickable: true }
+      function init() {
+        if (swiper) swiper.destroy();
+        document.getElementById('galeriWrapper').innerHTML = GALERI.map((s,i) => `
+          <div class="swiper-slide">
+            <div class="galeri-photo"><img src="${s}" alt="Foto ${i+1}" onerror="this.onerror=null;this.src='${FALLBACK[i]}';"></div>
+          </div>`).join('');
+        swiper = new Swiper("#galeriSwiper", {
+          effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto", loop: true,
+          coverflowEffect: { rotate: 0, stretch: 30, depth: 200, modifier: 1, slideShadows: true },
+          pagination: { el: ".galeri-swiper .swiper-pagination", clickable: true }
         });
       }
 
-      window.bukaGaleri = function() {
+      window.bukaGaleri = () => {
         document.getElementById('sc2').style.display = 'none';
         document.getElementById('bgVideo').style.display = 'none';
         document.getElementById('galeri-overlay').style.display = 'flex';
-        if (!galeriSwiper) initGaleriSwiper();
-        else galeriSwiper.slideToLoop(0, 0);
-        if (audio.paused) audio.play();
-        vinyl.classList.add('spinning');
-        confetti({ particleCount: 40, spread: 60, origin: { y: 0.5 } });
+        if (!swiper) init(); else swiper.slideToLoop(0,0);
+        if (audio.paused) audio.play(); vinyl.classList.add('spinning');
+        confetti({ particleCount: 50, spread: 70, origin: { y: 0.5 } });
       };
-
-      window.tutupGaleri = function() {
+      window.tutupGaleri = () => {
         document.getElementById('galeri-overlay').style.display = 'none';
         document.getElementById('sc2').style.display = 'flex';
         document.getElementById('bgVideo').style.display = 'block';
       };
-
-      // Preload
-      setTimeout(initGaleriSwiper, 500);
+      setTimeout(init, 300);
     })();
 
-    // === FITUR UTAMA ===
-    function createHeart(e) { const heart=document.createElement('div'); heart.className='petal click-heart'; heart.innerHTML='❤️'; heart.style.cssText=`position:fixed; pointer-events:none; color:var(--dark-pink); font-size:20px; z-index:12000; left:${e.clientX}px; top:${e.clientY}px; animation:floatUp 1s forwards;`; document.body.appendChild(heart); setTimeout(()=>heart.remove(),1000); }
-    setInterval(()=>{ if(document.getElementById('camera-ucapan-container').style.display==='flex')return; const petals=['🌸','❤️','✨']; const petal=document.createElement('div'); petal.className='petal'; petal.innerHTML=petals[Math.floor(Math.random()*petals.length)]; petal.style.left=Math.random()*100+'vw'; petal.style.top='-10%'; document.body.appendChild(petal); gsap.to(petal,{y:window.innerHeight+50,x:"random(-50,50)",rotation:360,duration:5,ease:"none",onComplete:()=>petal.remove()}); },700);
-    function toggleMusic(){ audio.paused ? (audio.play(), vinyl.classList.add('spinning')) : (audio.pause(), vinyl.classList.remove('spinning')); }
-    function toSc2(){ gsap.to("#sc1",{opacity:0,duration:0.5,onComplete:()=>{document.getElementById('sc1').style.display='none';document.getElementById('sc2').style.display='flex';}}); }
-    function startApp(){ audio.play().catch(()=>{}); document.getElementById('music-control').style.display='flex'; document.getElementById('global-back-btn').style.display='block'; vinyl.classList.add('spinning'); gsap.to([bgVideo,"#sc2"],{opacity:0,duration:0.8,onComplete:()=>{bgVideo.style.display='none';document.getElementById('sc2').style.display='none';document.getElementById('board').style.display='block';gsap.from(".card",{y:1000,rotation:45,stagger:0.1,duration:1,ease:"back.out"});}}); }
-    function backToModeSelection(){ gsap.to("#board",{opacity:0,duration:0.5,onComplete:()=>{document.getElementById('board').style.display='none';document.getElementById('global-back-btn').style.display='none';document.getElementById('bgVideo').style.display='block';document.getElementById('sc2').style.display='flex';gsap.to([bgVideo,"#sc2"],{opacity:1,duration:0.5});document.getElementById('board').style.opacity=1;}}); }
-    function zoomCard(el){ if(currentActive)return; currentActive=el; el.style.zIndex="5000"; document.getElementById('global-back-btn').style.display='none'; document.getElementById('close-area').style.display='block'; if(el.id==='card7')confetti({particleCount:150,spread:70,origin:{y:0.6}}); gsap.to(el,{x:(window.innerWidth/2-el.getBoundingClientRect().left-52),y:(window.innerHeight/2-el.getBoundingClientRect().top-67),scale:2.3,rotation:0,duration:0.6,ease:"power2.out",onComplete:()=>{const btn=document.getElementById('global-reveal-btn');btn.style.display="block";gsap.to(btn,{scale:1,duration:0.3});}}); }
-    function backToBoard(){ if(!currentActive)return; const el=currentActive; el.querySelector('.message-box').classList.remove('active'); const btn=document.getElementById('global-reveal-btn'); gsap.to(btn,{scale:0,duration:0.2,onComplete:()=>btn.style.display="none"}); gsap.to(el,{x:0,y:0,scale:1,rotation:"random(-10,10)",duration:0.5,onComplete:()=>{el.style.zIndex="100";currentActive=null;document.getElementById('close-area').style.display='none';document.getElementById('global-back-btn').style.display='block';}}); }
-    function dodge(b){ gsap.to(b,{x:(Math.random()-0.5)*250,y:(Math.random()-0.5)*250,duration:0.2,ease:"power2.out"}); }
-    function openQuiz(){ const btnNo=document.getElementById('btnNo'); if(btnNo)gsap.set(btnNo,{x:0,y:0}); document.getElementById('quiz-text').innerText=currentActive.getAttribute('data-q'); const isCard7=currentActive.id==="card7"; document.getElementById('std-buttons').style.display=isCard7?"none":"block"; document.getElementById('rating-buttons').style.display=isCard7?"grid":"none"; document.getElementById('quiz-overlay').style.display='flex'; }
-    function solveQuiz(){ document.getElementById('quiz-overlay').style.display='none'; document.getElementById('global-reveal-btn').style.display="none"; currentActive.querySelector('.message-box').classList.add('active'); }
-    function sendRating(v){ window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`,'_blank'); solveQuiz(); setTimeout(showFinalLetter,2000); }
-    function showFinalLetter(){ document.getElementById('letter-overlay').style.display='flex'; const text="Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓"; let i=0; function type(){ if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type(); }
+    // ==================== FITUR UTAMA ====================
+    function createHeart(e) { const heart = document.createElement('div'); heart.className = 'petal click-heart'; heart.innerHTML = '❤️'; heart.style.cssText = `position:fixed; pointer-events:none; color:var(--dark-pink); font-size:20px; z-index:12000; left:${e.clientX}px; top:${e.clientY}px; animation:floatUp 1s forwards;`; document.body.appendChild(heart); setTimeout(() => heart.remove(), 1000); }
+    setInterval(() => { if (document.getElementById('camera-ucapan-container').style.display === 'flex') return; const petals = ['🌸','❤️','✨']; const petal = document.createElement('div'); petal.className = 'petal'; petal.innerHTML = petals[Math.floor(Math.random() * petals.length)]; petal.style.left = Math.random() * 100 + 'vw'; petal.style.top = '-10%'; document.body.appendChild(petal); gsap.to(petal, { y: window.innerHeight + 50, x: "random(-50, 50)", rotation: 360, duration: 5, ease: "none", onComplete: () => petal.remove() }); }, 700);
+    function toggleMusic() { audio.paused ? (audio.play(), vinyl.classList.add('spinning')) : (audio.pause(), vinyl.classList.remove('spinning')); }
+    function toSc2() { gsap.to("#sc1", { opacity: 0, duration: 0.5, onComplete: () => { document.getElementById('sc1').style.display = 'none'; document.getElementById('sc2').style.display = 'flex'; }}); }
+    function startApp() { audio.play().catch(() => {}); document.getElementById('music-control').style.display = 'flex'; document.getElementById('global-back-btn').style.display = 'block'; vinyl.classList.add('spinning'); gsap.to([bgVideo, "#sc2"], { opacity: 0, duration: 0.8, onComplete: () => { bgVideo.style.display = 'none'; document.getElementById('sc2').style.display = 'none'; document.getElementById('board').style.display = 'block'; gsap.from(".card", { y: 1000, rotation: 45, stagger: 0.1, duration: 1, ease: "back.out" }); }}); }
+    function backToModeSelection() { gsap.to("#board", { opacity: 0, duration: 0.5, onComplete: () => { document.getElementById('board').style.display = 'none'; document.getElementById('global-back-btn').style.display = 'none'; document.getElementById('bgVideo').style.display = 'block'; document.getElementById('sc2').style.display = 'flex'; gsap.to([bgVideo, "#sc2"], { opacity: 1, duration: 0.5 }); document.getElementById('board').style.opacity = 1; }}); }
+    function zoomCard(el) { if (currentActive) return; currentActive = el; el.style.zIndex = "5000"; document.getElementById('global-back-btn').style.display = 'none'; document.getElementById('close-area').style.display = 'block'; if (el.id === 'card7') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); gsap.to(el, { x: (window.innerWidth/2 - el.getBoundingClientRect().left - 52), y: (window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale: 2.3, rotation: 0, duration: 0.6, ease: "power2.out", onComplete: () => { const btn = document.getElementById('global-reveal-btn'); btn.style.display = "block"; gsap.to(btn, { scale: 1, duration: 0.3 }); }}); }
+    function backToBoard() { if (!currentActive) return; const el = currentActive; el.querySelector('.message-box').classList.remove('active'); const btn = document.getElementById('global-reveal-btn'); gsap.to(btn, { scale: 0, duration: 0.2, onComplete: () => btn.style.display = "none" }); gsap.to(el, { x: 0, y: 0, scale: 1, rotation: "random(-10, 10)", duration: 0.5, onComplete: () => { el.style.zIndex = "100"; currentActive = null; document.getElementById('close-area').style.display = 'none'; document.getElementById('global-back-btn').style.display = 'block'; }}); }
+    function dodge(b) { const randomX = (Math.random() - 0.5) * 250; const randomY = (Math.random() - 0.5) * 250; gsap.to(b, { x: randomX, y: randomY, duration: 0.2, ease: "power2.out" }); }
+    function openQuiz() { const btnNo = document.getElementById('btnNo'); if (btnNo) gsap.set(btnNo, { x: 0, y: 0 }); document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q'); const isCard7 = currentActive.id === "card7"; document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block"; document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none"; document.getElementById('quiz-overlay').style.display = 'flex'; }
+    function solveQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; document.getElementById('global-reveal-btn').style.display = "none"; currentActive.querySelector('.message-box').classList.add('active'); }
+    function sendRating(v) { window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); solveQuiz(); setTimeout(showFinalLetter, 2000); }
+    function showFinalLetter() { document.getElementById('letter-overlay').style.display = 'flex'; const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓"; let i = 0; function type() { if (i < text.length) { document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; i++; setTimeout(type, 50); } } type(); }
   </script>
 </body>
 </html>

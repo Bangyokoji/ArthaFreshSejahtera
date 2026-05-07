@@ -117,70 +117,74 @@
 
         #message-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 21000; display: none; text-align: center; width: 80%; max-width: 280px; border: 3px solid var(--pink); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        /* ========== MBOTOK ATTACK - VISUAL BARU ========== */
-        #mbotok-overlay {
-            position: fixed; inset: 0; z-index: 25000; 
-            background: linear-gradient(135deg, #ffddee, #fff0f5);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'Quicksand', sans-serif;
-            overflow: hidden;
+        /* ========== GALERI WISUDA ========== */
+        #galeri-overlay {
+            position: fixed; inset: 0; z-index: 22000; display: none;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 30px 15px;
         }
-        .mbotok-bg-pattern {
-            position: absolute; inset: 0; pointer-events: none;
-            background-image: radial-gradient(circle at 20% 30%, #ff85a2 1px, transparent 1px),
-                              radial-gradient(circle at 80% 70%, #ff4d79 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.2;
+        .galeri-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 25px 20px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
-        .mbotok-card {
-            position: relative; z-index: 10; background: white;
-            border-radius: 30px; padding: 30px 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            width: 90%; max-width: 320px;
-            border: 2px solid #ffe0e8;
+        .galeri-teks {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 77, 121, 0.5);
+            line-height: 1.4;
         }
-        .mbotok-header {
-            font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--dark-pink);
-            text-align: center; line-height: 1.2;
+        .galeri-swiper {
+            width: 100%;
+            height: 300px;
+            padding-bottom: 30px;
         }
-        .mbotok-photo {
-            width: 140px; height: 180px; background: white; padding: 10px 10px 30px 10px;
-            border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            position: relative;
+        .galeri-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .mbotok-photo img {
-            width: 100%; height: 100%; object-fit: cover; border-radius: 4px;
+        .galeri-photo {
+            width: 180px;
+            height: 240px;
+            background: white;
+            padding: 10px 10px 30px 10px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .mbotok-photo::after {
-            content: "❤️"; position: absolute; bottom: 5px; left: 50%;
-            transform: translateX(-50%); font-size: 1rem;
+        .galeri-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
         }
-        .mbotok-stats {
-            display: flex; gap: 25px; font-size: 1.1rem; color: #555;
+        .galeri-btn-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid white;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
             font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
         }
-        .stat-item { display: flex; align-items: center; gap: 6px; }
-        .mbotok-btn {
-            background: var(--dark-pink); color: white; border: none;
-            padding: 10px 20px; border-radius: 50px; font-weight: bold;
-            cursor: pointer; font-size: 1rem; width: auto; min-width: 120px;
-            box-shadow: 0 5px 15px rgba(255,77,121,0.3);
-        }
-        .botol {
-            position: absolute; z-index: 5; cursor: pointer;
-            font-size: 3.5rem; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.3));
-            transition: transform 0.1s ease;
-            user-select: none;
-            pointer-events: auto;
-        }
-        .botol:active { transform: scale(1.4) rotate(15deg); }
-        .mbotok-result {
-            position: absolute; inset: 0; background: rgba(255,255,255,0.9);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 20; text-align: center; padding: 30px; border-radius: 30px;
-        }
-        .mbotok-result h2 { font-family: 'Caveat', cursive; font-size: 2.5rem; color: var(--dark-pink); }
-        .mbotok-result p { margin: 10px 0; font-size: 1.2rem; }
     </style>
 </head>
 <body onclick="createHeart(event)">
@@ -209,22 +213,21 @@
         <button class="btn-camera-ctrl btn-switch-camera" onclick="switchCamera()">🔄</button>
     </div>
 
-    <!-- Game MBOTOK OVERLAY - REVISED -->
-    <div id="mbotok-overlay">
-        <div class="mbotok-bg-pattern"></div>
-        <div class="mbotok-card" id="mbotok-card">
-            <div class="mbotok-header">🛡️ Lindungi Fotonya!</div>
-            <div class="mbotok-photo" id="mbotok-photo"><img id="mbotok-img" src="" alt="foto kenangan"></div>
-            <div class="mbotok-stats">
-                <div class="stat-item">❤️ <span id="nyawa">3</span></div>
-                <div class="stat-item">⏳ <span id="waktu">30</span>s</div>
+    <!-- Overlay Galeri Wisuda -->
+    <div id="galeri-overlay">
+        <button class="galeri-btn-close" onclick="tutupGaleri()">✕ Tutup</button>
+        <div class="galeri-card">
+            <div class="galeri-teks">
+                Selamat Wisuda Sayangku! 🎓✨<br><br>
+                Aku selalu berdoa yang terbaik untukmu.<br>
+                Semoga ilmunya berkah, masa depanmu cerah,<br>
+                dan setiap langkahmu selalu diridhoi Allah.<br><br>
+                I'm so proud of you! ❤️
             </div>
-            <button class="mbotok-btn" onclick="tutupMbotok()">← Kembali</button>
-        </div>
-        <div class="mbotok-result" id="mbotok-result">
-            <h2 id="result-title"></h2>
-            <p id="result-msg"></p>
-            <button class="mbotok-btn" onclick="tutupMbotok()">Tutup</button>
+            <div class="swiper galeri-swiper">
+                <div class="swiper-wrapper" id="galeri-wrapper"></div>
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
     </div>
 
@@ -241,7 +244,7 @@
             <h2 style="font-family:'Caveat'; font-size:2.2rem; color:#5d4037;">Siapkan hatimu ya? 🧸</h2>
             <button class="btn-main" onclick="startApp()">MASUK KE DUNIA KITA ✨</button>
             <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ff85a2); margin-top:10px;" onclick="startUcapan()">KARTU UCAPAN KAMERA 💌</button>
-            <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ffd700); margin-top:10px;" onclick="bukaMbotok()">MBOTOK ATTACK 🧼</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ffd700); margin-top:10px;" onclick="bukaGaleri()">GALERI WISUDA 🖼️</button>
         </div>
     </div>
 
@@ -350,42 +353,31 @@
                 let startScale = 1;
                 let startRotation = 0;
 
-                function getDist(t1, t2) {
-                    return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-                }
-                function getAngle(t1, t2) {
-                    return Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180 / Math.PI;
-                }
+                function getDist(t1, t2) { return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY); }
+                function getAngle(t1, t2) { return Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180 / Math.PI; }
 
                 togaImg.addEventListener('pointerdown', (e) => {
                     if (e.pointerType === 'mouse' && e.button !== 0) return;
                     e.preventDefault();
                     dragging = true;
-                    startX = e.clientX;
-                    startY = e.clientY;
-                    startStateX = togaState.x;
-                    startStateY = togaState.y;
+                    startX = e.clientX; startY = e.clientY;
+                    startStateX = togaState.x; startStateY = togaState.y;
                     togaImg.setPointerCapture(e.pointerId);
                 });
 
                 window.addEventListener('pointermove', (e) => {
                     if (!dragging) return;
-                    const dx = e.clientX - startX;
-                    const dy = e.clientY - startY;
-                    togaState.x = startStateX + dx;
-                    togaState.y = startStateY + dy;
+                    togaState.x = startStateX + (e.clientX - startX);
+                    togaState.y = startStateY + (e.clientY - startY);
                     updateToga();
                 });
 
-                window.addEventListener('pointerup', () => {
-                    dragging = false;
-                });
+                window.addEventListener('pointerup', () => { dragging = false; });
 
                 togaImg.addEventListener('touchstart', (e) => {
                     if (e.touches.length === 2) {
                         e.preventDefault();
-                        const t1 = e.touches[0];
-                        const t2 = e.touches[1];
+                        const t1 = e.touches[0], t2 = e.touches[1];
                         initDist = getDist(t1, t2);
                         initAngle = getAngle(t1, t2);
                         startScale = togaState.scale;
@@ -396,46 +388,31 @@
                 togaImg.addEventListener('touchmove', (e) => {
                     if (e.touches.length === 2) {
                         e.preventDefault();
-                        const t1 = e.touches[0];
-                        const t2 = e.touches[1];
+                        const t1 = e.touches[0], t2 = e.touches[1];
                         const newDist = getDist(t1, t2);
                         const newAngle = getAngle(t1, t2);
-                        
                         if (initDist > 0) {
-                            let newScale = startScale * (newDist / initDist);
-                            togaState.scale = Math.min(Math.max(newScale, 0.2), 5.0);
+                            togaState.scale = Math.min(Math.max(startScale * (newDist / initDist), 0.2), 5.0);
                         }
-                        
-                        let deltaAngle = newAngle - initAngle;
-                        togaState.rotation = startRotation + deltaAngle;
+                        togaState.rotation = startRotation + (newAngle - initAngle);
                         updateToga();
                     }
                 });
 
-                togaImg.addEventListener('touchend', () => {
-                    initDist = 0;
-                });
+                togaImg.addEventListener('touchend', () => { initDist = 0; });
             }
 
             window.switchCamera = async function() {
                 currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
-                if (cameraStream) {
-                    cameraStream.getTracks().forEach(t => t.stop());
-                }
+                if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
                     });
                     cameraStream = stream;
                     videoEl.srcObject = stream;
-                    if (currentFacingMode === "user") {
-                        previewWrapper.classList.add("mirrored");
-                    } else {
-                        previewWrapper.classList.remove("mirrored");
-                    }
-                } catch (e) {
-                    alert("Gagal mengganti kamera");
-                }
+                    previewWrapper.classList.toggle("mirrored", currentFacingMode === "user");
+                } catch (e) { alert("Gagal mengganti kamera"); }
             };
 
             window.startUcapan = async function() {
@@ -447,26 +424,19 @@
                     cameraStream = stream;
                     videoEl.srcObject = stream;
                     previewWrapper.classList.toggle('mirrored', currentFacingMode === "user");
-
                     document.getElementById('sc2').style.display = 'none';
                     document.getElementById('bgVideo').style.display = 'none';
                     document.getElementById('camera-ucapan-container').style.display = 'flex';
                     if (audio.paused) audio.play();
                     vinyl.classList.add('spinning');
-
                     initSwiper();
                     drawSparkles();
                     initTogaInteraction();
-                } catch (e) {
-                    alert("Izin kamera ditolak 🎥");
-                }
+                } catch (e) { alert("Izin kamera ditolak 🎥"); }
             };
 
             window.stopUcapan = function() {
-                if (cameraStream) {
-                    cameraStream.getTracks().forEach(track => track.stop());
-                    cameraStream = null;
-                }
+                if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); cameraStream = null; }
                 cancelAnimationFrame(animationFrameId);
                 document.getElementById('camera-ucapan-container').style.display = 'none';
                 document.getElementById('sc2').style.display = 'flex';
@@ -475,20 +445,7 @@
 
             function initSwiper() {
                 const PHOTO_ASSETS = [
-                    "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
-                    "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
-                    "https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM",
-                    "https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh",
-                    "https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d",
-                    "https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP",
-                    "https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9",
-                    "https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC",
-                    "https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK",
-                    "https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K",
-                    "https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h",
-                    "https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe",
-                    "https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam",
-                    "https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"
+                    "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5","https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1","https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM","https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh","https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d","https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP","https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9","https://lh3.googleusercontent.com/d/1jJa0dCK1dslCDaJu4OUgAAaYf0h_F0XC","https://lh3.googleusercontent.com/d/1r_TwJf6xyNc1rMmtHuKa7GeBNQt8wMGK","https://lh3.googleusercontent.com/d/1FBiCFQLslYO0l2VCezADBGjZyKpdpI3K","https://lh3.googleusercontent.com/d/1ukYQ3KUPjrwZji37Y9RahbtppdV6nl6h","https://lh3.googleusercontent.com/d/1PtSLiyfo3YUsKccL8o8nVrI6KBfjkFWe","https://lh3.googleusercontent.com/d/1rLIXZ8hKvDsvpHiw32p2S1Ybg-PJxDam","https://lh3.googleusercontent.com/d/1YGcZ4EV5F7FPngownc-VjKpBGIMJB--U"
                 ];
                 const wrapper = document.getElementById('ucapan-wrapper');
                 wrapper.innerHTML = '';
@@ -499,154 +456,61 @@
                     wrapper.appendChild(slide);
                 });
                 new Swiper(".mySwiper", {
-                    effect: "coverflow",
-                    centeredSlides: true,
-                    slidesPerView: "auto",
-                    loop: true,
+                    effect: "coverflow", centeredSlides: true, slidesPerView: "auto", loop: true,
                     coverflowEffect: { rotate: 30, stretch: 0, depth: 100, modifier: 1, slideShadows: true },
                     pagination: { el: ".swiper-pagination", clickable: true }
                 });
             }
 
             window.showMsg = function(idx) {
-                const msgs = [
-                    "Cie lulus! Proud of you sayang! 🎓✨",
-                    "I love you more than anything! 😍❤️",
-                    "Senyum kamu itu penyemangat aku. 😜❤️",
-                    "Bobo nyenyak, mimpiin aku ya! 😴💤",
-                    "Kamu tetep cakep meski belum mandi hihi 😊🌸",
-                    "Aku selalu ada di samping kamu. 🏆💖",
-                    "Happy Graduation Sayang! I'm so proud! 🎓💖",
-                    "Masa depan kita cerah bareng ya sayang! ✨",
-                    "Terima kasih sudah berjuang sampai sini! 💌",
-                    "Kamu itu versi terbaik dalam hidupku. 🧸❤️",
-                    "Jangan pernah capek buat jadi hebat ya! 💪",
-                    "Hati aku cuma buat kamu selamanya. 🔐💖",
-                    "Setiap detik sama kamu itu berharga banget. ⏳❤️",
-                    "I Love You, Thalita Sayang! ♾️🎓"
-                ];
+                const msgs = ["Cie lulus! Proud of you sayang! 🎓✨","I love you more than anything! 😍❤️","Senyum kamu itu penyemangat aku. 😜❤️","Bobo nyenyak, mimpiin aku ya! 😴💤","Kamu tetep cakep meski belum mandi hihi 😊🌸","Aku selalu ada di samping kamu. 🏆💖","Happy Graduation Sayang! I'm so proud! 🎓💖","Masa depan kita cerah bareng ya sayang! ✨","Terima kasih sudah berjuang sampai sini! 💌","Kamu itu versi terbaik dalam hidupku. 🧸❤️","Jangan pernah capek buat jadi hebat ya! 💪","Hati aku cuma buat kamu selamanya. 🔐💖","Setiap detik sama kamu itu berharga banget. ⏳❤️","I Love You, Thalita Sayang! ♾️🎓"];
                 document.getElementById('msg-text').innerText = msgs[idx];
                 document.getElementById('message-popup').style.display = 'block';
                 confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 } });
             };
         })();
 
-        // ==================== GAME MBOTOK ATTACK - REVISED ====================
+        // ==================== GALERI WISUDA ====================
         (function() {
-            const MBOTOK_PHOTOS = [
-                "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
-                "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
-                "https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM",
-                "https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh",
-                "https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d",
-                "https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP",
-                "https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9"
+            const GALERI_PHOTOS = [
+                "https://drive.google.com/uc?export=view&id=1oTUasXgoJByzhauv-XwuCGe74yYc3sKf",
+                "https://drive.google.com/uc?export=view&id=1tauWbtDHhIYVOA6uTJKDt0580G74fwtn",
+                "https://drive.google.com/uc?export=view&id=1hReor1qhGhbirnyHic-1rLPhRGSDRrRY",
+                "https://drive.google.com/uc?export=view&id=1lO3Hh88qhT53k7RDDIuFxIfVvtm1gwPk",
+                "https://drive.google.com/uc?export=view&id=1lxsiwAEX_F8ec6O3fMYLFaf3etzd-ypn"
             ];
 
-            let nyawa = 3;
-            let waktu = 30;
-            let botolInterval, timerInterval;
-            let gameAktif = false;
+            let galeriSwiper = null;
 
-            window.bukaMbotok = function() {
+            window.bukaGaleri = function() {
                 document.getElementById('sc2').style.display = 'none';
                 document.getElementById('bgVideo').style.display = 'none';
-                document.getElementById('mbotok-overlay').style.display = 'flex';
-                document.getElementById('mbotok-card').style.display = 'flex';
-                document.getElementById('mbotok-result').style.display = 'none';
+                document.getElementById('galeri-overlay').style.display = 'flex';
                 
-                const randomFoto = MBOTOK_PHOTOS[Math.floor(Math.random() * MBOTOK_PHOTOS.length)];
-                document.getElementById('mbotok-img').src = randomFoto;
+                if (!galeriSwiper) {
+                    const wrapper = document.getElementById('galeri-wrapper');
+                    wrapper.innerHTML = '';
+                    GALERI_PHOTOS.forEach(src => {
+                        const slide = document.createElement('div');
+                        slide.className = 'swiper-slide';
+                        slide.innerHTML = `<div class="galeri-photo"><img src="${src}" alt="foto wisuda"></div>`;
+                        wrapper.appendChild(slide);
+                    });
+                    galeriSwiper = new Swiper(".galeri-swiper", {
+                        effect: "cards",
+                        grabCursor: true,
+                        loop: true,
+                        pagination: { el: ".galeri-swiper .swiper-pagination", clickable: true }
+                    });
+                }
                 
-                nyawa = 3;
-                waktu = 30;
-                updateHUD();
-                gameAktif = true;
-                
-                botolInterval = setInterval(munculkanBotol, 800);
-                timerInterval = setInterval(() => {
-                    waktu--;
-                    updateHUD();
-                    if (waktu <= 0) menang();
-                }, 1000);
+                if (audio.paused) audio.play();
+                vinyl.classList.add('spinning');
+                confetti({ particleCount: 50, spread: 70, origin: { y: 0.5 } });
             };
 
-            function munculkanBotol() {
-                if (!gameAktif) return;
-                
-                const botol = document.createElement('div');
-                botol.className = 'botol';
-                botol.innerHTML = '🧴';
-                botol.style.position = 'absolute';
-                const dariKiri = Math.random() > 0.5;
-                botol.style.left = dariKiri ? '-60px' : (window.innerWidth + 60) + 'px';
-                botol.style.top = Math.random() * (window.innerHeight - 200) + 100 + 'px';
-                document.getElementById('mbotok-overlay').appendChild(botol);
-                
-                const targetX = window.innerWidth / 2 - 20;
-                const targetY = window.innerHeight / 2 - 60;
-                const startX = parseFloat(botol.style.left);
-                const startY = parseFloat(botol.style.top);
-                
-                gsap.to(botol, { 
-                    x: targetX - startX, 
-                    y: targetY - startY, 
-                    duration: 2.5, 
-                    ease: "power1.in",
-                    onComplete: () => {
-                        if (botol.parentNode && gameAktif) {
-                            botol.remove();
-                            nyawa--;
-                            updateHUD();
-                            gsap.to('#mbotok-photo', { x: 10, duration: 0.1, yoyo: true, repeat: 3 });
-                            if (nyawa <= 0) kalah();
-                        }
-                    }
-                });
-                
-                botol.addEventListener('pointerdown', (e) => {
-                    e.stopPropagation();
-                    if (!gameAktif) return;
-                    botol.remove();
-                    confetti({ 
-                        particleCount: 15, 
-                        spread: 40, 
-                        origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
-                    });
-                });
-            }
-
-            function updateHUD() {
-                document.getElementById('nyawa').innerText = nyawa;
-                document.getElementById('waktu').innerText = waktu;
-            }
-
-            function menang() {
-                gameAktif = false;
-                clearInterval(botolInterval);
-                clearInterval(timerInterval);
-                document.getElementById('mbotok-card').style.display = 'none';
-                document.getElementById('result-title').innerText = '🎉 Kamu Hebat!';
-                document.getElementById('result-msg').innerText = 'Mbotok pun tak bisa menghalangi cinta kita! ❤️';
-                document.getElementById('mbotok-result').style.display = 'flex';
-                confetti({ particleCount: 100, spread: 100, origin: { y: 0.5 } });
-            }
-
-            function kalah() {
-                gameAktif = false;
-                clearInterval(botolInterval);
-                clearInterval(timerInterval);
-                document.getElementById('mbotok-card').style.display = 'none';
-                document.getElementById('result-title').innerText = '💔 Sayang...';
-                document.getElementById('result-msg').innerText = 'Foto terkena mbotok! Tapi jangan lupa mandi ya... 🚿';
-                document.getElementById('mbotok-result').style.display = 'flex';
-            }
-
-            window.tutupMbotok = function() {
-                gameAktif = false;
-                clearInterval(botolInterval);
-                clearInterval(timerInterval);
-                document.getElementById('mbotok-overlay').style.display = 'none';
+            window.tutupGaleri = function() {
+                document.getElementById('galeri-overlay').style.display = 'none';
                 document.getElementById('sc2').style.display = 'flex';
                 document.getElementById('bgVideo').style.display = 'block';
             };
@@ -690,37 +554,50 @@
         }
 
         function zoomCard(el) {
-            if (currentActive) return; currentActive = el; el.style.zIndex="5000"; document.getElementById('global-back-btn').style.display='none'; document.getElementById('close-area').style.display='block';
-            if(el.id === 'card7') confetti({ particleCount:150, spread:70, origin:{y:0.6} });
-            gsap.to(el, { x:(window.innerWidth/2 - el.getBoundingClientRect().left - 52), y:(window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale:2.3, rotation:0, duration:0.6 });
-            gsap.to("#global-reveal-btn", { scale:1, display:'block', duration:0.3 });
+            if (currentActive) return;
+            currentActive = el; el.style.zIndex = "5000"; document.getElementById('global-back-btn').style.display = 'none'; document.getElementById('close-area').style.display = 'block';
+            if (el.id === 'card7') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            gsap.to(el, { x: (window.innerWidth/2 - el.getBoundingClientRect().left - 52), y: (window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale: 2.3, rotation: 0, duration: 0.6, ease: "power2.out", onComplete: () => {
+                const btn = document.getElementById('global-reveal-btn');
+                btn.style.display = "block";
+                gsap.to(btn, { scale: 1, duration: 0.3 });
+            }});
         }
 
         function backToBoard() {
-            const el = currentActive; el.querySelector('.message-box').classList.remove('active');
-            gsap.to("#global-reveal-btn", { scale:0, display:'none', duration:0.2 });
-            gsap.to(el, { x:0, y:0, scale:1, rotation:"random(-10,10)", duration:0.5, onComplete:() => { el.style.zIndex="100"; currentActive=null; document.getElementById('close-area').style.display='none'; document.getElementById('global-back-btn').style.display='block'; }});
+            if (!currentActive) return;
+            const el = currentActive;
+            el.querySelector('.message-box').classList.remove('active');
+            const btn = document.getElementById('global-reveal-btn');
+            gsap.to(btn, { scale: 0, duration: 0.2, onComplete: () => btn.style.display = "none" });
+            gsap.to(el, { x: 0, y: 0, scale: 1, rotation: "random(-10, 10)", duration: 0.5, onComplete: () => {
+                el.style.zIndex = "100"; currentActive = null;
+                document.getElementById('close-area').style.display = 'none'; document.getElementById('global-back-btn').style.display = 'block';
+            }});
         }
 
         function dodge(b) {
-            const randomX = (Math.random() - 0.5) * 250;
-            const randomY = (Math.random() - 0.5) * 250;
-            gsap.to(b, { x: randomX, y: randomY, duration: 0.2, ease: "power2.out" });
+            gsap.to(b, { x: (Math.random() - 0.5) * 250, y: (Math.random() - 0.5) * 250, duration: 0.2, ease: "power2.out" });
         }
 
         function openQuiz() {
+            const btnNo = document.getElementById('btnNo');
+            if (btnNo) gsap.set(btnNo, { x: 0, y: 0 });
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
             document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none";
-            document.getElementById('quiz-overlay').style.display='flex';
+            document.getElementById('quiz-overlay').style.display = 'flex';
         }
 
-        function solveQuiz() { document.getElementById('quiz-overlay').style.display='none'; document.getElementById('global-reveal-btn').style.display="none"; currentActive.querySelector('.message-box').classList.add('active'); }
+        function solveQuiz() { document.getElementById('quiz-overlay').style.display = 'none'; document.getElementById('global-reveal-btn').style.display = "none"; currentActive.querySelector('.message-box').classList.add('active'); }
         function sendRating(v) { window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); solveQuiz(); setTimeout(showFinalLetter, 2000); }
         function showFinalLetter() {
-            document.getElementById('letter-overlay').style.display='flex'; const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
-            let i=0; function type() { if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type();
+            document.getElementById('letter-overlay').style.display = 'flex';
+            const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
+            let i = 0;
+            function type() { if (i < text.length) { document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; i++; setTimeout(type, 50); } }
+            type();
         }
     </script>
 </body>

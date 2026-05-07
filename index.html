@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Congrats Thalitaa sayanggg 🎓❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Quicksand:wght@600&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -15,9 +15,9 @@
         :root { --pink: #ff85a2; --cream: #fdf5e6; --dark-pink: #ff4d79; --brown: #8d6e63; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        body { 
-            background-color: var(--cream); 
-            font-family: 'Quicksand', sans-serif; 
+        body {
+            background-color: var(--cream);
+            font-family: 'Quicksand', sans-serif;
             overflow: hidden; height: 100vh; width: 100vw;
             background-image: url('https://lh3.googleusercontent.com/d/1y0F5zvIMw4I6c8HiaUJ2YrtpqDH-QlIn');
             background-size: cover; background-position: center;
@@ -85,23 +85,19 @@
             object-fit: cover;
         }
         
-        /* Toga yang bisa di-drag & pinch */
         #draggable-toga {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
+            top: 0; left: 0;
             width: 120px;
             height: auto;
             z-index: 100;
-            touch-action: none; /* penting untuk drag */
+            touch-action: none;
             cursor: grab;
-            filter: drop-shadow(0 0 10px #ffd700);
-            transition: none;
+            filter: drop-shadow(0 0 12px #ffd700);
+            transform-origin: 0 0;
+            will-change: transform;
         }
-        #draggable-toga:active {
-            cursor: grabbing;
-        }
+        #draggable-toga:active { cursor: grabbing; }
 
         .ucapan-header {
             position: absolute; top: 8%; z-index: 10; font-family: 'Caveat'; font-size: 2.5rem;
@@ -115,10 +111,63 @@
         .polaroid-frame { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; height: 100%; cursor: pointer; }
         .polaroid-frame img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; pointer-events: none; }
         
-        .btn-camera-ctrl { position: absolute; z-index: 20; background: rgba(0,0,0,0.4); color: white; border: 1.5px solid white; border-radius: 30px; font-weight: bold; padding: 10px 20px; backdrop-filter: blur(10px); }
-        .btn-close-ucapan { top: 25px; left: 20px; } 
+        .btn-camera-ctrl { position: absolute; z-index: 20; background: rgba(0,0,0,0.4); color: white; border: 1.5px solid white; border-radius: 30px; font-weight: bold; padding: 10px 20px; backdrop-filter: blur(10px); cursor: pointer; }
+        .btn-close-ucapan { top: 25px; left: 20px; }
+        .btn-switch-camera { bottom: 25px; right: 25px; }
 
         #message-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; z-index: 21000; display: none; text-align: center; width: 80%; max-width: 280px; border: 3px solid var(--pink); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+        /* CSS untuk fitur Kirim Pesan ke Langit & Polaroid Universe */
+        #kirim-pesan-overlay {
+            position: fixed; inset: 0; z-index: 25000; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Quicksand', sans-serif; overflow: hidden;
+        }
+        .stars-layer {
+            position: absolute; inset: 0; pointer-events: none;
+            background: radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                        radial-gradient(2px 2px at 100px 70px, #fff, transparent),
+                        radial-gradient(3px 3px at 200px 150px, #ffd700, transparent),
+                        radial-gradient(2px 2px at 280px 40px, #fff, transparent);
+            background-size: 300px 300px;
+            animation: twinkle 4s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+        .pesan-input-box {
+            position: relative; z-index: 10; background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px); border-radius: 25px; padding: 30px;
+            width: 85%; max-width: 360px; text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .pesan-textarea {
+            width: 100%; height: 100px; border-radius: 15px; border: none;
+            padding: 15px; font-family: 'Quicksand', sans-serif; font-size: 1rem;
+            resize: none; background: rgba(255,255,255,0.8); color: #333;
+            margin-bottom: 15px;
+        }
+        .pesan-flying-text {
+            position: absolute; z-index: 20; font-family: 'Caveat', cursive;
+            font-size: 1.8rem; color: #ffd700; text-shadow: 0 0 15px #ff4d79;
+            pointer-events: none; opacity: 0;
+        }
+        #zoom-polaroid-container {
+            position: absolute; inset: 0; z-index: 30; display: none;
+            justify-content: center; align-items: center; background: rgba(0,0,0,0.9);
+        }
+        .zoom-photo {
+            width: 160px; height: 200px; background: white; padding: 8px 8px 25px 8px;
+            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            cursor: pointer; position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .zoom-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        .final-message {
+            position: absolute; z-index: 40; text-align: center; color: white;
+            font-family: 'Caveat', cursive; font-size: 2.5rem; display: none;
+        }
     </style>
 </head>
 <body onclick="createHeart(event)">
@@ -133,20 +182,32 @@
 
     <!-- Mode Kamera -->
     <div id="camera-ucapan-container">
-        <div id="cam-preview-wrapper" class="mirrored">
+        <div id="cam-preview-wrapper">
             <video id="ucapan-video" autoplay playsinline></video>
             <canvas id="toga-canvas"></canvas>
         </div>
-        
-        <!-- Toga Interaktif -->
         <img id="draggable-toga" src="https://raw.githubusercontent.com/Bangyokoji/For-you/7e6e04cf14e68d5925fccf66264853b3ad754b7d/1778046603580.png" crossorigin="anonymous">
-
         <div class="ucapan-header">CONGRATULATIONS SAYANG</div>
         <div class="swiper mySwiper">
             <div class="swiper-wrapper" id="ucapan-wrapper"></div>
             <div class="swiper-pagination"></div>
         </div>
         <button class="btn-camera-ctrl btn-close-ucapan" onclick="stopUcapan()">← Kembali</button>
+        <button class="btn-camera-ctrl btn-switch-camera" onclick="switchCamera()">🔄</button>
+    </div>
+
+    <!-- OVERLAY KIRIM PESAN KE LANGIT -->
+    <div id="kirim-pesan-overlay">
+        <div class="stars-layer"></div>
+        <div class="pesan-input-box" id="input-box">
+            <h2 style="color:white; font-family:'Caveat'; margin-bottom:15px;">Tulis Pesan Cintamu 💌</h2>
+            <textarea id="pesan-textarea" class="pesan-textarea" placeholder="Tulis sesuatu untuk Thalitaa..." maxlength="100"></textarea>
+            <button class="btn-main" onclick="kirimPesanKeLangit()" style="background:linear-gradient(135deg, #ffd700, #ff4d79);">KIRIM KE LANGIT 🕊️</button>
+            <button class="btn-main" onclick="tutupKirimPesan()" style="margin-top:10px; background:rgba(255,255,255,0.2);">← Kembali</button>
+        </div>
+        <div id="zoom-polaroid-container"></div>
+        <div class="pesan-flying-text" id="flying-text"></div>
+        <div class="final-message" id="final-message"></div>
     </div>
 
     <!-- Screen 1 & 2 -->
@@ -162,6 +223,7 @@
             <h2 style="font-family:'Caveat'; font-size:2.2rem; color:#5d4037;">Siapkan hatimu ya? 🧸</h2>
             <button class="btn-main" onclick="startApp()">MASUK KE DUNIA KITA ✨</button>
             <button class="btn-main" style="background:linear-gradient(135deg, #ff4d79, #ff85a2); margin-top:10px;" onclick="startUcapan()">KARTU UCAPAN KAMERA 💌</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #ffd700, #ff4d79); margin-top:10px;" onclick="bukaKirimPesan()">KIRIM PESAN KE LANGIT 🕊️</button>
         </div>
     </div>
 
@@ -204,7 +266,7 @@
         const vinyl = document.getElementById('vinyl');
         const bgVideo = document.getElementById('bgVideo');
 
-        // ==================== KAMERA + TOGA INTERAKTIF ====================
+        // ==================== KAMERA + TOGA BEBAS + SWITCH CAMERA ====================
         (function() {
             let cameraStream = null;
             const videoEl = document.getElementById("ucapan-video");
@@ -212,9 +274,10 @@
             const togaCtx = togaCanvas.getContext("2d");
             const previewWrapper = document.getElementById("cam-preview-wrapper");
             const togaImg = document.getElementById("draggable-toga");
+            let currentFacingMode = "user";
             let animationFrameId;
+            let togaState = { x: 0, y: 0, scale: 1, rotation: 0 };
 
-            // --- Sparkle effect ---
             const sparkles = [];
             for (let i = 0; i < 30; i++) {
                 sparkles.push({
@@ -249,89 +312,123 @@
                 animationFrameId = requestAnimationFrame(drawSparkles);
             }
 
-            // --- Drag & Pinch Logic ---
+            function updateToga() {
+                togaImg.style.transform = `translate(${togaState.x}px, ${togaState.y}px) rotate(${togaState.rotation}deg) scale(${togaState.scale})`;
+            }
+
             function initTogaInteraction() {
-                let isDragging = false;
-                let startX, startY;
-                let initialLeft, initialTop;
-                let initialScale = 1;
-                let initialPinchDistance = 0;
-                let currentScale = 1;
-                let currentLeft = window.innerWidth / 2 - togaImg.offsetWidth / 2;
-                let currentTop = window.innerHeight / 2 - togaImg.offsetHeight / 2;
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                togaState.x = w/2 - 60;
+                togaState.y = h/2 - 60;
+                togaState.scale = 1;
+                togaState.rotation = 0;
+                updateToga();
 
-                // Set posisi awal
-                togaImg.style.left = currentLeft + 'px';
-                togaImg.style.top = currentTop + 'px';
-                togaImg.style.transform = `scale(${currentScale})`;
+                let dragging = false;
+                let startX, startY, startStateX, startStateY;
+                let initDist = 0;
+                let initAngle = 0;
+                let startScale = 1;
+                let startRotation = 0;
 
-                // Pointer events (mouse & touch)
+                function getDist(t1, t2) {
+                    return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+                }
+                function getAngle(t1, t2) {
+                    return Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180 / Math.PI;
+                }
+
                 togaImg.addEventListener('pointerdown', (e) => {
                     if (e.pointerType === 'mouse' && e.button !== 0) return;
                     e.preventDefault();
-                    isDragging = true;
+                    dragging = true;
                     startX = e.clientX;
                     startY = e.clientY;
-                    initialLeft = currentLeft;
-                    initialTop = currentTop;
+                    startStateX = togaState.x;
+                    startStateY = togaState.y;
                     togaImg.setPointerCapture(e.pointerId);
                 });
 
                 window.addEventListener('pointermove', (e) => {
-                    if (!isDragging) return;
+                    if (!dragging) return;
                     const dx = e.clientX - startX;
                     const dy = e.clientY - startY;
-                    currentLeft = initialLeft + dx;
-                    currentTop = initialTop + dy;
-                    togaImg.style.left = currentLeft + 'px';
-                    togaImg.style.top = currentTop + 'px';
+                    togaState.x = startStateX + dx;
+                    togaState.y = startStateY + dy;
+                    updateToga();
                 });
 
-                window.addEventListener('pointerup', (e) => {
-                    isDragging = false;
+                window.addEventListener('pointerup', () => {
+                    dragging = false;
                 });
 
-                // Pinch zoom
                 togaImg.addEventListener('touchstart', (e) => {
                     if (e.touches.length === 2) {
-                        initialPinchDistance = getPinchDistance(e.touches[0], e.touches[1]);
-                        initialScale = currentScale;
+                        e.preventDefault();
+                        const t1 = e.touches[0];
+                        const t2 = e.touches[1];
+                        initDist = getDist(t1, t2);
+                        initAngle = getAngle(t1, t2);
+                        startScale = togaState.scale;
+                        startRotation = togaState.rotation;
                     }
                 });
 
                 togaImg.addEventListener('touchmove', (e) => {
                     if (e.touches.length === 2) {
-                        const newDist = getPinchDistance(e.touches[0], e.touches[1]);
-                        if (initialPinchDistance > 0) {
-                            currentScale = initialScale * (newDist / initialPinchDistance);
-                            currentScale = Math.min(Math.max(currentScale, 0.4), 3.0); // batas ukuran
-                            togaImg.style.transform = `scale(${currentScale})`;
+                        e.preventDefault();
+                        const t1 = e.touches[0];
+                        const t2 = e.touches[1];
+                        const newDist = getDist(t1, t2);
+                        const newAngle = getAngle(t1, t2);
+                        
+                        if (initDist > 0) {
+                            let newScale = startScale * (newDist / initDist);
+                            togaState.scale = Math.min(Math.max(newScale, 0.2), 5.0);
                         }
+                        
+                        let deltaAngle = newAngle - initAngle;
+                        togaState.rotation = startRotation + deltaAngle;
+                        updateToga();
                     }
                 });
 
-                togaImg.addEventListener('touchend', (e) => {
-                    if (e.touches.length < 2) {
-                        initialPinchDistance = 0;
-                    }
+                togaImg.addEventListener('touchend', () => {
+                    initDist = 0;
                 });
-
-                function getPinchDistance(touch1, touch2) {
-                    const dx = touch1.clientX - touch2.clientX;
-                    const dy = touch1.clientY - touch2.clientY;
-                    return Math.sqrt(dx * dx + dy * dy);
-                }
             }
+
+            window.switchCamera = async function() {
+                currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(t => t.stop());
+                }
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+                    });
+                    cameraStream = stream;
+                    videoEl.srcObject = stream;
+                    if (currentFacingMode === "user") {
+                        previewWrapper.classList.add("mirrored");
+                    } else {
+                        previewWrapper.classList.remove("mirrored");
+                    }
+                } catch (e) {
+                    alert("Gagal mengganti kamera");
+                }
+            };
 
             window.startUcapan = async function() {
                 try {
                     if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
                     const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }
+                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
                     });
                     cameraStream = stream;
                     videoEl.srcObject = stream;
-                    previewWrapper.classList.add('mirrored');
+                    previewWrapper.classList.toggle('mirrored', currentFacingMode === "user");
 
                     document.getElementById('sc2').style.display = 'none';
                     document.getElementById('bgVideo').style.display = 'none';
@@ -416,6 +513,151 @@
             };
         })();
 
+        // ==================== FITUR KIRIM PESAN KE LANGIT + POLAROID UNIVERSE ====================
+        (function() {
+            const ZOOM_PHOTOS = [
+                "https://lh3.googleusercontent.com/d/1kV5l1-cLJ1aLQd_I-zBOtjK9ehbfmNc5",
+                "https://lh3.googleusercontent.com/d/1X_sdUfVzD7TEMWeglfQdMkfNFHxsbUM1",
+                "https://lh3.googleusercontent.com/d/17CNVqgj58T4fwRHDfGoPSpql1mocdgWM",
+                "https://lh3.googleusercontent.com/d/15N-ZS0lhqvB5GZUnjKBZKObkyHV7xwHh",
+                "https://lh3.googleusercontent.com/d/1jxXCedbKke_eFqFJtEr1Gs_M4IlyCr9d",
+                "https://lh3.googleusercontent.com/d/1zYvu4jKFWsl4OI-2b2wos5aT2f8uyUaP",
+                "https://lh3.googleusercontent.com/d/1zhBg0KVZpBSYn3nt8F566bJadLw-GbT9"
+            ];
+
+            let infiniteZoomStep = 0;
+            let currentZoomPhoto = null;
+
+            window.bukaKirimPesan = function() {
+                document.getElementById('sc2').style.display = 'none';
+                document.getElementById('bgVideo').style.display = 'none';
+                document.getElementById('kirim-pesan-overlay').style.display = 'flex';
+                resetPesanUI();
+            };
+
+            window.tutupKirimPesan = function() {
+                document.getElementById('kirim-pesan-overlay').style.display = 'none';
+                document.getElementById('sc2').style.display = 'flex';
+                document.getElementById('bgVideo').style.display = 'block';
+                resetPesanUI();
+            };
+
+            function resetPesanUI() {
+                document.getElementById('input-box').style.display = 'block';
+                document.getElementById('zoom-polaroid-container').style.display = 'none';
+                document.getElementById('zoom-polaroid-container').innerHTML = '';
+                document.getElementById('flying-text').style.opacity = '0';
+                document.getElementById('final-message').style.display = 'none';
+                document.getElementById('pesan-textarea').value = '';
+                infiniteZoomStep = 0;
+                currentZoomPhoto = null;
+            }
+
+            window.kirimPesanKeLangit = function() {
+                const pesan = document.getElementById('pesan-textarea').value.trim();
+                if (pesan === '') {
+                    alert('Tulis pesan dulu ya, sayang! ❤️');
+                    return;
+                }
+
+                // Sembunyikan input box
+                const inputBox = document.getElementById('input-box');
+                gsap.to(inputBox, { opacity: 0, scale: 0.8, duration: 0.5, onComplete: () => {
+                    inputBox.style.display = 'none';
+                }});
+
+                // Animasi pesan terbang
+                const flyingText = document.getElementById('flying-text');
+                flyingText.innerText = pesan;
+                flyingText.style.opacity = '1';
+                flyingText.style.left = '50%';
+                flyingText.style.top = '60%';
+                flyingText.style.transform = 'translate(-50%, -50%) scale(1)';
+                
+                gsap.to(flyingText, {
+                    top: '-20%',
+                    scale: 0.5,
+                    opacity: 0,
+                    duration: 3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        flyingText.style.opacity = '0';
+                        mulaiInfiniteZoom();
+                    }
+                });
+
+                // Confetti saat kirim
+                confetti({ particleCount: 80, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85a2', '#fff'] });
+            };
+
+            function mulaiInfiniteZoom() {
+                const container = document.getElementById('zoom-polaroid-container');
+                container.style.display = 'flex';
+                infiniteZoomStep = 0;
+                tampilkanFotoZoom();
+            }
+
+            function tampilkanFotoZoom() {
+                const container = document.getElementById('zoom-polaroid-container');
+                container.innerHTML = '';
+                
+                const fotoSrc = ZOOM_PHOTOS[infiniteZoomStep % ZOOM_PHOTOS.length];
+                const div = document.createElement('div');
+                div.className = 'zoom-photo';
+                div.innerHTML = `<img src="${fotoSrc}" alt="foto">`;
+                div.style.transform = 'translate(-50%, -50%) scale(0.1)';
+                div.style.opacity = '0';
+                container.appendChild(div);
+
+                gsap.to(div, {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        currentZoomPhoto = div;
+                    }
+                });
+
+                div.addEventListener('click', () => {
+                    if (infiniteZoomStep >= ZOOM_PHOTOS.length - 1) {
+                        // Foto terakhir, tampilkan pesan akhir
+                        tampilkanPesanAkhir();
+                        return;
+                    }
+
+                    // Ledakkan foto dan tampilkan selanjutnya
+                    gsap.to(div, {
+                        scale: 2.5,
+                        opacity: 0,
+                        duration: 0.5,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            infiniteZoomStep++;
+                            tampilkanFotoZoom();
+                            confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
+                        }
+                    });
+                });
+            }
+
+            function tampilkanPesanAkhir() {
+                const container = document.getElementById('zoom-polaroid-container');
+                gsap.to(container, { opacity: 0, duration: 0.5, onComplete: () => {
+                    container.style.display = 'none';
+                    const finalMsg = document.getElementById('final-message');
+                    finalMsg.style.display = 'block';
+                    finalMsg.innerHTML = `
+                        <p>Pesanmu telah sampai ke langit 🕊️</p>
+                        <p style="font-size:2rem; margin:20px 0;">You're my everything, Thalitaa ❤️</p>
+                        <button class="btn-main" onclick="tutupKirimPesan()" style="margin-top:20px;">← Kembali</button>
+                    `;
+                    gsap.from(finalMsg, { scale: 0.5, opacity: 0, duration: 0.6, ease: "back.out(1.7)" });
+                    confetti({ particleCount: 200, spread: 150, origin: { y: 0.4 }, colors: ['#ffd700', '#ff85a2', '#fff'] });
+                }});
+            }
+        })();
+
         // ==================== FITUR UTAMA ====================
         function createHeart(e) {
             const heart = document.createElement('div');
@@ -454,16 +696,38 @@
         }
 
         function zoomCard(el) {
-            if (currentActive) return; currentActive = el; el.style.zIndex="5000"; document.getElementById('global-back-btn').style.display='none'; document.getElementById('close-area').style.display='block';
-            if(el.id === 'card7') confetti({ particleCount:150, spread:70, origin:{y:0.6} });
-            gsap.to(el, { x:(window.innerWidth/2 - el.getBoundingClientRect().left - 52), y:(window.innerHeight/2 - el.getBoundingClientRect().top - 67), scale:2.3, rotation:0, duration:0.6 });
-            gsap.to("#global-reveal-btn", { scale:1, display:'block', duration:0.3 });
+            if (currentActive) return;
+            currentActive = el;
+            el.style.zIndex = "5000";
+            document.getElementById('global-back-btn').style.display = 'none';
+            document.getElementById('close-area').style.display = 'block';
+            if (el.id === 'card7') {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
+            gsap.to(el, { 
+                x: (window.innerWidth/2 - el.getBoundingClientRect().left - 52), 
+                y: (window.innerHeight/2 - el.getBoundingClientRect().top - 67), 
+                scale: 2.3, rotation: 0, duration: 0.6, ease: "power2.out",
+                onComplete: () => {
+                    const btn = document.getElementById('global-reveal-btn');
+                    btn.style.display = "block";
+                    gsap.to(btn, { scale: 1, duration: 0.3 });
+                }
+            });
         }
 
         function backToBoard() {
-            const el = currentActive; el.querySelector('.message-box').classList.remove('active');
-            gsap.to("#global-reveal-btn", { scale:0, display:'none', duration:0.2 });
-            gsap.to(el, { x:0, y:0, scale:1, rotation:"random(-10,10)", duration:0.5, onComplete:() => { el.style.zIndex="100"; currentActive=null; document.getElementById('close-area').style.display='none'; document.getElementById('global-back-btn').style.display='block'; }});
+            if (!currentActive) return;
+            const el = currentActive;
+            el.querySelector('.message-box').classList.remove('active');
+            const btn = document.getElementById('global-reveal-btn');
+            gsap.to(btn, { scale: 0, duration: 0.2, onComplete: () => btn.style.display = "none" });
+            gsap.to(el, { x: 0, y: 0, scale: 1, rotation: "random(-10, 10)", duration: 0.5, onComplete: () => {
+                el.style.zIndex = "100";
+                currentActive = null;
+                document.getElementById('close-area').style.display = 'none';
+                document.getElementById('global-back-btn').style.display = 'block';
+            }});
         }
 
         function dodge(b) {
@@ -473,18 +737,41 @@
         }
 
         function openQuiz() {
+            const btnNo = document.getElementById('btnNo');
+            if (btnNo) {
+                gsap.set(btnNo, { x: 0, y: 0 });
+            }
+            
             document.getElementById('quiz-text').innerText = currentActive.getAttribute('data-q');
             const isCard7 = currentActive.id === "card7";
             document.getElementById('std-buttons').style.display = isCard7 ? "none" : "block";
             document.getElementById('rating-buttons').style.display = isCard7 ? "grid" : "none";
-            document.getElementById('quiz-overlay').style.display='flex';
+            document.getElementById('quiz-overlay').style.display = 'flex';
         }
 
-        function solveQuiz() { document.getElementById('quiz-overlay').style.display='none'; document.getElementById('global-reveal-btn').style.display="none"; currentActive.querySelector('.message-box').classList.add('active'); }
-        function sendRating(v) { window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); solveQuiz(); setTimeout(showFinalLetter, 2000); }
+        function solveQuiz() { 
+            document.getElementById('quiz-overlay').style.display = 'none'; 
+            document.getElementById('global-reveal-btn').style.display = "none"; 
+            currentActive.querySelector('.message-box').classList.add('active'); 
+        }
+
+        function sendRating(v) { 
+            window.open(`https://wa.me/${nomorWA}?text=Sayang! Aku kasih rating ${v} buat webnya! 🎓❤️`, '_blank'); 
+            solveQuiz(); 
+            setTimeout(showFinalLetter, 2000); 
+        }
+
         function showFinalLetter() {
-            document.getElementById('letter-overlay').style.display='flex'; const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
-            let i=0; function type() { if(i<text.length){ document.getElementById("typewriter-text").innerHTML += text[i]==='\n'?'<br>':text[i]; i++; setTimeout(type,50); } } type();
+            document.getElementById('letter-overlay').style.display = 'flex'; 
+            const text = "Happy Graduation Sayangku... ❤️\n\nAku bangga banget sama kamu. Teruslah bersinar, lovee youu moreee sayanggg✨🎓";
+            let i = 0; 
+            function type() { 
+                if (i < text.length) { 
+                    document.getElementById("typewriter-text").innerHTML += text[i] === '\n' ? '<br>' : text[i]; 
+                    i++; setTimeout(type, 50); 
+                } 
+            } 
+            type();
         }
     </script>
 </body>
